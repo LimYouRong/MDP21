@@ -43,6 +43,8 @@ import java.util.UUID;
 
 /**
  * Bluetooth page
+ * Modified from
+ * https://android.googlesource.com/platform/development/+/master/samples/BluetoothChat/src/com/example/android/BluetoothChat/DeviceListActivity.java
  */
 
 public class BluetoothActivity extends AppCompatActivity {
@@ -180,6 +182,7 @@ public class BluetoothActivity extends AppCompatActivity {
             //bluetooth adapter not available, check device
             Toast.makeText(getApplicationContext(), "Bluetooth Device Not Available", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
         else
         {
@@ -325,15 +328,15 @@ public class BluetoothActivity extends AppCompatActivity {
     private void newDevicesList(){
         //notify user of button click
         Toast.makeText(this, "Scanning started", Toast.LENGTH_SHORT).show();
+        //check if user has enabled required permissions
+        checkBTPermissions();
+
         //if device is already discovering, cancel it
         if(btAdapter.isDiscovering()) {
             btAdapter.cancelDiscovery();
         }
 
-        //check if user has enabled required permissions
-        checkBTPermissions();
-
-        //start discovering
+        //start discovering by requesting from bluetooth adapter
         btAdapter.startDiscovery();
         IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(bReceiver, discoverDevicesIntent);
@@ -348,12 +351,16 @@ public class BluetoothActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //"saves" bluetooth device for other navigating into other activities
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                newDevicesArrayAdapter.add(device.getName()+ "\n MAC Address: "+device.getAddress());
+
+                // If it's already paired, skip it, because it's been listed already
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                    newDevicesArrayAdapter.add(device.getName()+ "\n MAC Address: "+device.getAddress());
+                }
+
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 //Finish scan
                 if (newDevicesArrayAdapter.getCount() == 0) {
-                    String noDevices = "No devices found";
-                    newDevicesArrayAdapter.add(noDevices);
+                    newDevicesArrayAdapter.add("No devices found");
                 }
             }
         }
@@ -380,7 +387,6 @@ public class BluetoothActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
         if (!btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, 200);

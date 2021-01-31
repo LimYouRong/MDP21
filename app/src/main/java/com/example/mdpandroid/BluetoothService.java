@@ -20,6 +20,8 @@ import java.util.UUID;
  * connections with other devices. It has a thread that listens for
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
+ * Modified from
+ * https://android.googlesource.com/platform/development/+/master/samples/BluetoothChat/src/com/example/android/BluetoothChat/BluetoothChatService.java
  */
 public class BluetoothService {
     // Debugging
@@ -51,12 +53,6 @@ public class BluetoothService {
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
-    /**
-     * Constructor. Prepares a new BluetoothChat session.
-     *
-     * @param context The UI Activity Context
-     * @param handler A handler to send messages back to the UI Activity
-     */
     public BluetoothService(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
@@ -77,7 +73,7 @@ public class BluetoothService {
     }
 
     /**
-     * Return the current connection state.
+     * Synchronized method is a method which can be used by only one thread at a time
      */
     public synchronized int getState() {
         return mState;
@@ -89,7 +85,6 @@ public class BluetoothService {
      * Called by onResume()
      */
     public synchronized void start() {
-        Log.d(TAG, "start");
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -471,7 +466,6 @@ public class BluetoothService {
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
             int bytes;
 
@@ -484,18 +478,13 @@ public class BluetoothService {
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
+                    Log.e(TAG, "IOexception caught:", e);
                     connectionLost();
                     break;
                 }
             }
         }
 
-        /**
-         * Write to the connected OutStream.
-         *
-         * @param buffer The bytes to write
-         */
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
