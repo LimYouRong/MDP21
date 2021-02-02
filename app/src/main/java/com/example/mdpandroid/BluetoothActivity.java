@@ -493,7 +493,7 @@ public class BluetoothActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String theText = intent.getStringExtra("tts");
+            String theText = intent.getStringExtra("bluetoothMsg");
             if (theText != null){
                 if (btService.getState() != btService.STATE_CONNECTED) {
                     Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();

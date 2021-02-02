@@ -45,6 +45,13 @@
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/deviceName"
+            android:layout_width="150dp"
+            android:layout_height="77dp"
+            android:layout_margin="10dp"
+            android:layout_marginStart="50dp"
+            android:textColor="@android:color/black" />
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nv"
             android:layout_width="wrap_content"
