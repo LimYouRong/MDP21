@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,11 +42,6 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Bluetooth page
- * Modified from
- * https://android.googlesource.com/platform/development/+/master/samples/BluetoothChat/src/com/example/android/BluetoothChat/DeviceListActivity.java
- */
 
 public class BluetoothActivity extends AppCompatActivity {
 
@@ -179,14 +175,14 @@ public class BluetoothActivity extends AppCompatActivity {
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if(btAdapter == null)
         {
-            //bluetooth adapter not available, check device
+            //no bluetooth adapter
             Toast.makeText(getApplicationContext(), "Bluetooth Device Not Available", Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
         else
         {
             if (!btAdapter.isEnabled()) {
+                //bluetooth not enabled
                 Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBTon,1);
             } else {
@@ -196,10 +192,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
                 if (pairedDevices.size()>0) {
                     //found at least one paired devices
-                    for(BluetoothDevice device : pairedDevices)
+                    for(BluetoothDevice bt : pairedDevices)
                     {
                         //add all paired devices to list
-                        list.add(device.getName() + "\n MAC Address: " + device.getAddress()); //Get the device's name and the address
+                        list.add(bt.getName() + "\n MAC Address: " + bt.getAddress()); //Get the device's name and the address
                     }
                 }
                 else {
@@ -266,8 +262,12 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     }
 
-    private void pairedDevicesList() {
+    //method called when user manually finds paired devices
+    private void pairedDevicesList()
+    {
+        //notify user of his button click
         Toast.makeText(this, "Refreshing paired devices", Toast.LENGTH_SHORT).show();
+        //check if user enabled required permissions
         checkBTPermissions();
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if(btAdapter == null)
@@ -328,9 +328,6 @@ public class BluetoothActivity extends AppCompatActivity {
     private void newDevicesList(){
         //notify user of button click
         Toast.makeText(this, "Scanning started", Toast.LENGTH_SHORT).show();
-        //check if user has enabled required permissions
-        checkBTPermissions();
-
         //if device is already discovering, cancel it
         if(btAdapter.isDiscovering()) {
             btAdapter.cancelDiscovery();
@@ -473,9 +470,10 @@ public class BluetoothActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //sendToMain used to indicate whether bluetooth device are connected for other activity
+    //method to pass data to MainActivity
     private void sendToMain(String msg) {
         Intent intent = new Intent("getConnectedDevice");
+        // You can also include some extra data.
         intent.putExtra("message", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
@@ -484,6 +482,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private void sendTextToMain(String msg) {
         Intent intent = new Intent("getTextFromDevice");
         // You can also include some extra data.
+        Log.d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Message received",msg);
         intent.putExtra("text", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
@@ -493,7 +492,7 @@ public class BluetoothActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String theText = intent.getStringExtra("bluetoothMsg");
+            String theText = intent.getStringExtra("bluetoothTextSend");
             if (theText != null){
                 if (btService.getState() != btService.STATE_CONNECTED) {
                     Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
@@ -550,8 +549,8 @@ public class BluetoothActivity extends AppCompatActivity {
 
     //register receivers needed
     private void registerReceivers(){
-        LocalBroadcastManager.getInstance(this).registerReceiver(mTextReceiver, new IntentFilter("getTextToSend"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mCtrlReceiver, new IntentFilter("getCtrlToSend"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mTextReceiver, new IntentFilter("BlueToothChatSendIntent"));//setting's send message
+        LocalBroadcastManager.getInstance(this).registerReceiver(mCtrlReceiver, new IntentFilter("BlueToothChatReceiveIntent"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mDcReceiver, new IntentFilter("initiateDc"));
         // Register for broadcasts when discovery has finished
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);

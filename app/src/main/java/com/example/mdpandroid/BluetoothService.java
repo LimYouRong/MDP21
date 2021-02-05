@@ -20,8 +20,6 @@ import java.util.UUID;
  * connections with other devices. It has a thread that listens for
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
- * Modified from
- * https://android.googlesource.com/platform/development/+/master/samples/BluetoothChat/src/com/example/android/BluetoothChat/BluetoothChatService.java
  */
 public class BluetoothService {
     // Debugging

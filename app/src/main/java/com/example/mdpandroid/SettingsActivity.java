@@ -224,9 +224,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     //to send bluetoothactivity for bluetooth chat
     private void sendToBtAct(String msg) {
-        Intent intent = new Intent("getTextToSend");
+        Intent intent = new Intent("BlueToothChatSendIntent");
         // You can also include some extra data.
-        intent.putExtra("tts", msg);
+        intent.putExtra("bluetoothTextSend", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

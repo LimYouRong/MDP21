@@ -16,6 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
         dl.addDrawerListener(t);
         t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
         t.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nv = (NavigationView)findViewById(R.id.nv);
         nv.setItemIconTintList(null);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -119,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
         if (bundle != null) {
             if (bundle.containsKey("device")) {
                 device = bundle.getString("device");
-
-                if (!device.equalsIgnoreCase("")) {
+                if(device == null){
+                    Log.d("FindMEEEEEEEEEEEEEEEEE","null");
+                }
+                else if (!device.equalsIgnoreCase("")) {
                     //enable all bluetooth-related buttons because there is a device connected
                     deviceName.setText("Connected to: " + device);
                 }
@@ -162,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendToBlueToothChat(String msg) {
-        Intent intent = new Intent("BlueToothChatIntent");
-        intent.putExtra("bluetoothMsg", msg);
+        Intent intent = new Intent("BlueToothChatSendIntent");
+        intent.putExtra("bluetoothTextSend", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
@@ -172,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String theName = intent.getStringExtra("message");
+            String theName = intent.getStringExtra("bluetoothTextReceive");
             if (theName == ""){
 
                 //no device connected, disable bluetooth-related actions
