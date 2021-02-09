@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
@@ -27,6 +28,7 @@
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:openDrawer="start"
         tools:context=".MainActivity">
 
 <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
@@ -36,7 +38,6 @@
 <!--            android:layout_gravity="bottom|end"-->
 <!--            android:layout_margin="@dimen/fab_margin"-->
 <!--            app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
 
 
         <LinearLayout
@@ -61,7 +62,7 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="579dp"
+                    android:layout_marginTop="500dp"
                     android:layout_toEndOf="@+id/send_map"
                     android:background="@drawable/button_2"
                     android:elevation="13dp"
@@ -76,7 +77,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="48dp"
-                    android:layout_marginTop="579dp"
+                    android:layout_marginTop="500dp"
                     android:background="@drawable/button_2"
                     android:elevation="13dp"
                     android:text="@string/send_map"
@@ -197,11 +198,12 @@
             <Button
                 android:id="@+id/explore_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#FFFFFF"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="102.43dp"
+                android:layout_marginTop="92.43dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="13dp"
                 android:text="@string/explore"
@@ -212,11 +214,12 @@
             <Button
                 android:id="@+id/fastest_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="161.51dp"
+                android:layout_marginTop="141.51dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="13dp"
                 android:text="@string/fastest"
@@ -227,11 +230,12 @@
             <Button
                 android:id="@+id/calibrate_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="218.09dp"
+                android:layout_marginTop="188.09dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="50dp"
                 android:text="@string/cali"
@@ -245,7 +249,7 @@
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="278.43dp"
+                android:layout_marginTop="238.43dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="50dp"
                 android:text="@string/refr"
@@ -258,7 +262,7 @@
                 android:layout_height="57dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="360.14dp"
+                android:layout_marginTop="320.14dp"
                 android:layout_marginEnd="48dp"
                 android:background="@drawable/status_box" />
 
@@ -268,7 +272,7 @@
                 android:layout_height="17.6dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="351dp"
+                android:layout_marginTop="311dp"
                 android:layout_marginEnd="71dp"
                 android:background="#F4F5FB"
                 android:gravity="top"
@@ -282,7 +286,7 @@
                 android:layout_height="17.6dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="375dp"
+                android:layout_marginTop="335dp"
                 android:layout_marginEnd="64dp"
                 android:background="#F4F5FB"
                 android:gravity="center_horizontal"
@@ -295,11 +299,12 @@
             <Button
                 android:id="@+id/set_wp_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="424.26dp"
+                android:layout_marginTop="364.26dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="50dp"
                 android:text="@string/setwp"
@@ -313,7 +318,7 @@
                 android:layout_height="57dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="502.2dp"
+                android:layout_marginTop="432.2dp"
                 android:layout_marginEnd="48dp"
                 android:background="@drawable/status_box" />
 
@@ -323,7 +328,7 @@
                 android:layout_height="17.6dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="492.14dp"
+                android:layout_marginTop="422.14dp"
                 android:layout_marginEnd="83dp"
                 android:background="#F4F5FB"
                 android:gravity="top"
@@ -337,7 +342,7 @@
                 android:layout_height="17.6dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="515dp"
+                android:layout_marginTop="445dp"
                 android:layout_marginEnd="64dp"
                 android:background="#F4F5FB"
                 android:gravity="center_horizontal"
@@ -350,11 +355,12 @@
             <Button
                 android:id="@+id/set_rob_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="567.57dp"
+                android:layout_marginTop="487.67dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="13dp"
                 android:text="@string/setrob"
@@ -395,39 +401,42 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="75dp"
                 android:layout_height="50dp"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/auto_switch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="664.37dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="131dp"
                 android:elevation="13dp"
                 android:text="@string/f1"
                 android:textAppearance="@style/roboto"
                 android:textColor="@color/txt"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="#ffffff" />
 
             <Button
                 android:id="@+id/F2_button"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="75dp"
                 android:layout_height="50dp"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/tilt_switch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="664.37dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="13dp"
                 android:text="@string/f2"
                 android:textAppearance="@style/roboto"
                 android:textColor="@color/txt"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="#ffffff" />
 
             <Button
                 android:id="@+id/reconf_button"
                 style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="724.71dp"
+                android:layout_marginTop="644.71dp"
                 android:layout_marginEnd="48dp"
                 android:elevation="13dp"
                 android:text="@string/reconf"
