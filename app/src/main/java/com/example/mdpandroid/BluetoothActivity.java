@@ -57,7 +57,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private ProgressDialog progress;
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
-    static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    static final UUID myUUID = UUID.fromString("163660a6-ad17-44fc-99c5-5c75e78ad815");
     String address = "";
     String name = "";
     private String device;
@@ -474,7 +474,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private void sendToMain(String msg) {
         Intent intent = new Intent("getConnectedDevice");
         // You can also include some extra data.
-        intent.putExtra("message", msg);
+        intent.putExtra("bluetoothTextReceive", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

@@ -55,6 +55,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+                <com.example.mdpandroid.MazeView
+                    android:id="@+id/mazeView"
+                    android:layout_width="285dp"
+                    android:layout_height="387dp"
+                    android:layout_marginTop="50dp" />
+
 
                 <Button
                     android:id="@+id/load_map"

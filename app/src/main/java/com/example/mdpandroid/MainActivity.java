@@ -33,6 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    //instantiate class to generate map
+    public MazeView mazeView;
+
     //navbar
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
@@ -40,17 +43,30 @@ public class MainActivity extends AppCompatActivity {
 
     //components
     private TextView deviceName;
-    private ImageButton upButton;
-    private ImageButton downButton;
-    private ImageButton leftButton;
-    private ImageButton rightButton;
+    private Button upButton;
+    private Button downButton;
+    private Button leftButton;
+    private Button rightButton;
     private Button chatboxBtn;
+    private Button load_mapBtn;
+    private Button send_mapBtn;
+    private Button explore_button;
+    private Button fastest_button;
+    private Button calibrate_button;
+    private Button refresh_button;
+    private Button set_wp_button;
+    private Button set_rob_button;
+
+    private TextView robcoord;
+
     private EditText chatboxEditText;
+    private TextView robot_staText;
 
 
     public static MessageAdapter messageAdapter;
     private RecyclerView chatView;
     private List<Message> messageList;
+
 
     private String device;
 
@@ -75,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         dl.addDrawerListener(t);
         t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
         t.syncState();
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nv = (NavigationView)findViewById(R.id.nv);
         nv.setItemIconTintList(null);
@@ -105,15 +120,113 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        load_mapBtn = findViewById(R.id.load_map);
+        send_mapBtn = findViewById(R.id.send_map);
+
+
+        explore_button = findViewById(R.id.explore_button);
+        explore_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","Explore button clicked");
+            }
+        });
+        fastest_button = findViewById(R.id.fastest_button);
+        fastest_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","fastest button clicked");
+            }
+        });
+
+
+        calibrate_button = findViewById(R.id.calibrate_button);
+        refresh_button = findViewById(R.id.refresh_button);
+        set_wp_button = findViewById(R.id.set_wp_button);
+        set_rob_button = findViewById(R.id.set_rob_button);
+
+
+
+        robot_staText = findViewById(R.id.robot_sta);
+
         //initialize components
         deviceName = (TextView) findViewById(R.id.deviceName);
         deviceName.setText("No connection found");
-//        upButton = findViewById(R.id.upButton);
-//        downButton = findViewById(R.id.downButton);
-//        leftButton = findViewById(R.id.leftButton);
-//        rightButton = findViewById(R.id.rightButton);
+        upButton = findViewById(R.id.front_button);
+        downButton = findViewById(R.id.back_button);
+        leftButton = findViewById(R.id.left_button);
+        rightButton = findViewById(R.id.right_button);
+
+        mazeView = findViewById(R.id.mazeView);
+        robcoord = (TextView) findViewById(R.id.robcoord);
+        robcoord.setText("X:-- Y:--");
 
         //TODO Set onclick listeners for them later
+        //CHECK WITH TEAM WHAT CONTROLS THEY WANT AVAILABLE
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","Left button clicked");
+                sendToBlueToothChat("Rotating Left");
+                mazeView.turn(0);
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+            }
+        });
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","right button clicked");
+                sendToBlueToothChat("AR,AN,R");
+                mazeView.turn(1);
+                robot_staText.setText("Rotating Right");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+            }
+        });
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","up button clicked");
+                sendToBlueToothChat("AR,AN,F");
+                mazeView.move(0);
+                robot_staText.setText("Moving Forward");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+            }
+        });
+        downButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","down button clicked");
+                sendToBlueToothChat("AR,AN,B");
+                mazeView.move(1);
+                robot_staText.setText("Rotating?");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+            }
+        });
+
+
+
+        set_wp_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("TAGGGGGGGGGGGG","setwaypoint button");
+                sendToBlueToothChat("PC,AN,1:1");
+//                if (mazeView.getWaypoint()[0] < 0) {
+//                    waypointTextView.setText("x:-- , y:--");
+//                } else {
+//                    waypointTextView.setText("x:" + (mazeView.getWaypoint()[0]+1) + " , y:"+ (mazeView.getWaypoint()[1]+1));
+//                }
+            }
+        });
+
+        set_rob_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGGGGG","setrobbutton button");
+//                sendCtrlToBtAct("PC,AN,"+(mazeView.getRobotCenter()[0]+1)+","+(mazeView.getRobotCenter()[1])+","+mazeView.angle);
+            }
+        });
 
 
         //retrieve intent values
@@ -125,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("FindMEEEEEEEEEEEEEEEEE","null");
                 }
                 else if (!device.equalsIgnoreCase("")) {
+                    Log.d("hehehehehehhehehhhhheh",device);
                     //enable all bluetooth-related buttons because there is a device connected
                     deviceName.setText("Connected to: " + device);
                 }
@@ -133,8 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothStatusReceiver,
                 new IntentFilter("getConnectedDevice"));
-//        LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothTextReceiver,
-//                new IntentFilter("getTextFromDevice"));
         //Bluetooth chat
         chatboxBtn = (Button) findViewById(R.id.chatboxBtn);
         chatboxEditText = (EditText) findViewById(R.id.chatboxEt);
@@ -196,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
 //                device = "";
             } else {
                 //device connected, enable all bluetooth-related actions
-//                nameTv.setText("Connected to: "+theName);
+                deviceName.setText("Connected to: "+theName);
 //                cbBtn.setEnabled(true);
 //                //joystickRight.setEnabled(true);
 //                upBtn.setEnabled(true);
@@ -211,6 +323,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+//    //to send bluetoothactivity for moving robot
+//    public void joystickBluetoothMessage(String msg) {
+//        Intent intent = new Intent("getCtrlToSend");
+//        // You can also include some extra data.
+//        if (msg.equals("AR,AN,F")) {
+//            statusTv.setText("Moving Forward");
+//        } else if (msg.equals("AR,AN,R")){
+//            statusTv.setText("Turning Right");
+//        } else if (msg.equals("AR,AN,L")){
+//            statusTv.setText("Turning Left");
+//        }
+//        intent.putExtra("control", msg);
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
