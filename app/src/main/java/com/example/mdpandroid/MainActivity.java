@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                String message = chatboxEditText.getText().toString();
+                String message = chatboxEditText.getText().toString().trim();
                 if (message.length() < 1){
                     //user did not type anything
                     Toast.makeText(MainActivity.this, "Text field is empty", Toast.LENGTH_SHORT).show();
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
 //                messageList.clear();
 //                chatAdapter.notifyDataSetChanged();
 //                statusTv.setText("Offline");
-//                device = "";
+                device = "";
             } else {
                 //device connected, enable all bluetooth-related actions
                 deviceName.setText("Connected to: "+theName);
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
 //                readyBtn.setBackgroundResource(R.drawable.commonbutton);
 //                //--dcBtn.setEnabled(true);
 //                statusTv.setText("Waiting for instructions");
-//                device = theName;
+                device = theName;
             }
         }
     };
@@ -338,6 +338,13 @@ public class MainActivity extends AppCompatActivity {
 //        intent.putExtra("control", msg);
 //        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 //    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(BluetoothStatusReceiver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
