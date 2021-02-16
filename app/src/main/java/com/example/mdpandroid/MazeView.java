@@ -25,6 +25,12 @@ public class MazeView extends View {
             this.row = row;
         }
     }
+    public int [] getWaypoint(){
+        return waypoint;
+    }
+    public void setWaypoint(int [] waypoint){
+        this.waypoint = waypoint;
+    }
 
     public MazeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -104,6 +110,12 @@ public class MazeView extends View {
         Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
         return robotCenter;
     }
+    public void setCurrentPosition(int[] position){
+        robotCenter[0] = position[0];
+        robotCenter[1] = position[1];
+
+    }
+
 //    private void updateRobotPosition (int direction){
 ////        robotCenter[0]   //X coord
 ////        robotCenter[1]   //Y coord

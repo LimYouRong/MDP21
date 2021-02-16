@@ -212,19 +212,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Log.d("TAGGGGGGGGGGGG","setwaypoint button");
-                sendToBlueToothChat("PC,AN,1:1");
-//                if (mazeView.getWaypoint()[0] < 0) {
-//                    waypointTextView.setText("x:-- , y:--");
-//                } else {
-//                    waypointTextView.setText("x:" + (mazeView.getWaypoint()[0]+1) + " , y:"+ (mazeView.getWaypoint()[1]+1));
-//                }
+                TextView wayPtText = findViewById(R.id.waypt);
+                //TODO Change line below to retrieve current pressed map box
+                mazeView.setWaypoint(new int[]{2, 2});
+                Log.d("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",mazeView.getWaypoint()[0]+" : "+ mazeView.getWaypoint()[1] );
+
+                wayPtText.setText("x:"+(mazeView.getWaypoint()[0]+1)+" , y:"+(mazeView.getWaypoint()[1]+1));
+                sendToBlueToothChat("PC,AN,"+mazeView.getWaypoint()[0]+1+","+mazeView.getWaypoint()[1]+1);
             }
         });
+
 
         set_rob_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","setrobbutton button");
+//                mazeView.
+                //TODO Change line below to retrieve current pressed map box
+                mazeView.setCurrentPosition(new int[]{5, 5});
+                robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
+                sendToBlueToothChat("PC,AN,"+ (mazeView.getCurrentPosition()[0]+1)+","+(mazeView.getCurrentPosition()[1]+1));
 //                sendCtrlToBtAct("PC,AN,"+(mazeView.getRobotCenter()[0]+1)+","+(mazeView.getRobotCenter()[1])+","+mazeView.angle);
             }
         });
