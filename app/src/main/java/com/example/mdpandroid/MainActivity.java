@@ -147,10 +147,6 @@ public class MainActivity extends AppCompatActivity {
         set_wp_button = findViewById(R.id.set_wp_button);
         set_rob_button = findViewById(R.id.set_rob_button);
 
-
-
-        robot_staText = findViewById(R.id.robot_sta);
-
         //initialize components
         deviceName = (TextView) findViewById(R.id.deviceName);
         deviceName.setText("No connection found");
@@ -169,8 +165,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","Left button clicked");
-                sendToBlueToothChat("Rotating Left");
+                sendToBlueToothChat("AR,AN,L");
+
                 mazeView.turn(0);
+                setStatusMessage("Rotating Left");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
@@ -180,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAGGGGGGGGGGGG","right button clicked");
                 sendToBlueToothChat("AR,AN,R");
                 mazeView.turn(1);
-                robot_staText.setText("Rotating Right");
+//                robot_staText.setText("Rotating Right");
+                setStatusMessage("Rotating Right");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
@@ -190,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAGGGGGGGGGGGG","up button clicked");
                 sendToBlueToothChat("AR,AN,F");
                 mazeView.move(0);
-                robot_staText.setText("Moving Forward");
+//                robot_staText.setText("Moving Forward");
+                setStatusMessage("Moving Forward");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
@@ -200,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAGGGGGGGGGGGG","down button clicked");
                 sendToBlueToothChat("AR,AN,B");
                 mazeView.move(1);
-                robot_staText.setText("Rotating?");
+                setStatusMessage("Rotating");
+//                robot_staText.setText("Rotating?");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
@@ -247,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothStatusReceiver,
                 new IntentFilter("getConnectedDevice"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothMessageReceiver,
+                new IntentFilter("getBluetoothMessage"));
         //Bluetooth chat
         chatboxBtn = (Button) findViewById(R.id.chatboxBtn);
         chatboxEditText = (EditText) findViewById(R.id.chatboxEt);
@@ -266,10 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     //user did not type anything
                     Toast.makeText(MainActivity.this, "Text field is empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    Message msgOut = new Message(0, message); //id = 0 because user is the one who sent this message
-                    //append current message to arraylist
-                    messageList.add(messageList.size(), msgOut);
-                    messageAdapter.notifyDataSetChanged();
+                    updateBluetoothChat(0,message);
                     chatboxEditText.setText("");
                     sendToBlueToothChat(message);
                 }
@@ -281,9 +281,34 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent("BlueToothChatSendIntent");
         intent.putExtra("bluetoothTextSend", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        updateBluetoothChat(0,msg);
     }
 
+    private void updateBluetoothChat(int id,String msg){
+        Message msgOut = new Message(id,msg);
+//        Message msgOut = new Message(0, message); //id = 0 because user is the one who sent this message
+        //append current message to arraylist
+        messageList.add(messageList.size(), msgOut);
+        messageAdapter.notifyDataSetChanged();
+
+    }
     //update status whenever connection changes
+    private BroadcastReceiver BluetoothMessageReceiver = new BroadcastReceiver() {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String theMessage = intent.getStringExtra("bluetoothMessage");
+            Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
+            updateBluetoothChat(1,theMessage);
+
+            if(theMessage == "Complete"){
+                //change status back to stopped
+
+            }
+
+        }
+    };
     private BroadcastReceiver BluetoothStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -323,6 +348,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    private void setStatusMessage(String message){
+//        findViewById(R.id.robot_sta);
+        robot_staText = findViewById(R.id.robot_sta);
+        robot_staText.setText(message);
+
+
+    }
 
 //    //to send bluetoothactivity for moving robot
 //    public void joystickBluetoothMessage(String msg) {

@@ -480,10 +480,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
     //method to send text received from bluetooth connection
     private void sendTextToMain(String msg) {
-        Intent intent = new Intent("getTextFromDevice");
+        Intent intent = new Intent("getBluetoothMessage");
         // You can also include some extra data.
         Log.d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Message received",msg);
-        intent.putExtra("text", msg);
+        intent.putExtra("bluetoothMessage", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
