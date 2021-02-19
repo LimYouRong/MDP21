@@ -21,8 +21,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private Button refresh_button;
     private Button set_wp_button;
     private Button set_rob_button;
+    private Switch switchAuto;
 
     private TextView robcoord;
 
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String device;
+    boolean autoUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +126,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        mazeView = findViewById(R.id.mazeView);
+        switchAuto = (Switch) findViewById(R.id.auto_switch) ;
+
+        switchAuto.setChecked(true);
+
+        switchAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    autoUpdate = true;
+                    mazeView.invalidate();
+                }else {
+                    autoUpdate = false;
+                }
+            }
+        });
+
         load_mapBtn = findViewById(R.id.load_map);
         send_mapBtn = findViewById(R.id.send_map);
 
@@ -155,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
         leftButton = findViewById(R.id.left_button);
         rightButton = findViewById(R.id.right_button);
 
-        mazeView = findViewById(R.id.mazeView);
         robcoord = (TextView) findViewById(R.id.robcoord);
         robcoord.setText("X:-- Y:--");
 
@@ -217,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 mazeView.setWaypoint(new int[]{2, 2});
                 Log.d("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",mazeView.getWaypoint()[0]+" : "+ mazeView.getWaypoint()[1] );
 
-                wayPtText.setText("x:"+(mazeView.getWaypoint()[0]+1)+" , y:"+(mazeView.getWaypoint()[1]+1));
+                wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
                 sendToBlueToothChat("PC,AN,"+mazeView.getWaypoint()[0]+1+","+mazeView.getWaypoint()[1]+1);
             }
         });
