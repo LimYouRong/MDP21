@@ -498,6 +498,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Log.d("&&&&&&&&&&&&&&&&&&&&&&&&&","printing");
                 //send out message
                 byte[] send = theText.getBytes();
                 btService.write(send);

@@ -402,37 +402,77 @@
                 android:textStyle="bold"
                 android:trackTint="#4E7D96" />
 
-            <Button
-                android:id="@+id/F1_button"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
+            <View
+                android:id="@+id/coord_box"
+                android:layout_width="159dp"
+                android:layout_height="57dp"
                 android:layout_below="@+id/auto_switch"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="131dp"
-                android:elevation="13dp"
-                android:text="@string/f1"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold"
-                app:backgroundTint="#ffffff" />
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/status_box" />
 
-            <Button
-                android:id="@+id/F2_button"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
-                android:layout_below="@+id/tilt_switch"
+            <TextView
+                android:id="@+id/coord_title"
+                android:layout_width="116dp"
+                android:layout_height="17.6dp"
+                android:layout_below="@+id/auto_switch"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="13dp"
-                android:text="@string/f2"
+                android:layout_marginEnd="83dp"
+                android:background="#F4F5FB"
+                android:gravity="top"
+                android:text="@string/robcoord_t"
                 android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold"
-                app:backgroundTint="#ffffff" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coord"
+                android:layout_width="118dp"
+                android:layout_height="17.6dp"
+                android:layout_below="@+id/auto_switch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="64dp"
+                android:background="#F4F5FB"
+                android:gravity="center_horizontal"
+                android:text="X:-- Y:--"
+                android:textAlignment="center"
+                android:textAppearance="@style/roboto"
+                android:textColor="#FF844B"
+                android:textStyle="bold" />
+
+<!--            <Button-->
+<!--                android:id="@+id/F1_button"-->
+<!--                style="@style/Widget.MaterialComponents.Button"-->
+<!--                android:layout_width="75dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_below="@+id/auto_switch"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginEnd="131dp"-->
+<!--                android:elevation="13dp"-->
+<!--                android:text="@string/f1"-->
+<!--                android:textAppearance="@style/roboto"-->
+<!--                android:textColor="@color/txt"-->
+<!--                android:textStyle="bold"-->
+<!--                app:backgroundTint="#ffffff" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/F2_button"-->
+<!--                style="@style/Widget.MaterialComponents.Button"-->
+<!--                android:layout_width="75dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_below="@+id/tilt_switch"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginEnd="48dp"-->
+<!--                android:elevation="13dp"-->
+<!--                android:text="@string/f2"-->
+<!--                android:textAppearance="@style/roboto"-->
+<!--                android:textColor="@color/txt"-->
+<!--                android:textStyle="bold"-->
+<!--                app:backgroundTint="#ffffff" />-->
 
             <Button
                 android:id="@+id/reconf_button"
