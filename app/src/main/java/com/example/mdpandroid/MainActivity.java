@@ -4,6 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
@@ -21,8 +25,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +37,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     //instantiate class to generate map
     public MazeView mazeView;
@@ -66,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     public static MessageAdapter messageAdapter;
     private RecyclerView chatView;
     private List<Message> messageList;
+
+    private SensorManager sensorManager;
+    private Switch tiltSwitch;
+    private boolean _tilt=false;
 
 
     private String device;
@@ -166,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","Left button clicked");
                 sendToBlueToothChat("AR,AN,L");
-
                 mazeView.turn(0);
                 setStatusMessage("Rotating Left");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
@@ -178,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAGGGGGGGGGGGG","right button clicked");
                 sendToBlueToothChat("AR,AN,R");
                 mazeView.turn(1);
-//                robot_staText.setText("Rotating Right");
                 setStatusMessage("Rotating Right");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
@@ -187,9 +195,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","up button clicked");
-                sendToBlueToothChat("AR,AN,F");
+                sendToBlueToothChat("AR,AN,1");
                 mazeView.move(0);
-//                robot_staText.setText("Moving Forward");
                 setStatusMessage("Moving Forward");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
@@ -201,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
                 sendToBlueToothChat("AR,AN,B");
                 mazeView.move(1);
                 setStatusMessage("Rotating");
-//                robot_staText.setText("Rotating?");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
@@ -227,12 +233,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","setrobbutton button");
-//                mazeView.
                 //TODO Change line below to retrieve current pressed map box
                 mazeView.setCurrentPosition(new int[]{5, 5});
                 robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
                 sendToBlueToothChat("PC,AN,"+ (mazeView.getCurrentPosition()[0]+1)+","+(mazeView.getCurrentPosition()[1]+1));
-//                sendCtrlToBtAct("PC,AN,"+(mazeView.getRobotCenter()[0]+1)+","+(mazeView.getRobotCenter()[1])+","+mazeView.angle);
+            }
+        });
+
+
+        //https://developer.android.com/reference/android/hardware/SensorManager
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        tiltSwitch = (Switch) findViewById(R.id.tilt_switch);
+        tiltSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    _tilt = true;
+                }else {
+                    _tilt =false;
+                }
             }
         });
 
@@ -405,5 +425,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+//        Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^",_tilt+"");
+        if (_tilt) {
+            float x = event.values[0];
+            float y = event.values[1];
+            //move robot only if tilt has been enabled
+            if (y < -5) {
+                //device has been tilted forward
+                mazeView.move(0);
+                setStatusMessage("Moving Forward");
+            } else if (x < -5) {
+                //device has been tilted to the right
+                mazeView.turn(1);
+                setStatusMessage("Rotating Right");
+            } else if (x > 5) {
+                //device has been tilted to the left
+                mazeView.turn(0);
+                setStatusMessage("Rotating Left");
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
