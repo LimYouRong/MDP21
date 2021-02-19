@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,6 +26,7 @@ public class MazeView extends View {
     private Paint whitePaint;
     private Paint orangePaint;
     private Paint backgroundPaint;
+    private Paint yellowPaint;
     private int cellWidth;
     private int cellHeight;
     MainActivity activityMain = (MainActivity) getContext();
@@ -54,6 +56,7 @@ public class MazeView extends View {
         darkBluePaint = new Paint();
         whitePaint = new Paint();
         orangePaint = new Paint();
+        yellowPaint = new Paint();
         backgroundPaint = new Paint();
 
         //setting color for all color
@@ -62,6 +65,7 @@ public class MazeView extends View {
         darkBluePaint.setColor(Color.parseColor("#4E7D96"));
         whitePaint.setColor(Color.WHITE);
         orangePaint.setColor(Color.parseColor("#FF844B"));
+        yellowPaint.setColor(Color.YELLOW);
         backgroundPaint.setColor(Color.parseColor("#F4F5FB"));
         backgroundPaint.setStrokeWidth(SPACE_WIDTH);
 
@@ -99,8 +103,6 @@ public class MazeView extends View {
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
 
-        canvas.drawColor(0xE4EDF2);
-
         //Plot empty Map
         for (int i=0;i<COLUMNS_SIZE;i++){
             for(int j=0;j<ROWS_SIZE;j++){
@@ -108,17 +110,24 @@ public class MazeView extends View {
             }
         }
 
+        //waypoint
+        canvas.drawRect(waypoint[0]*cellWidth, (ROWS_SIZE-1-waypoint[1])*cellHeight,
+                (waypoint[0] + 1) * cellWidth, (ROWS_SIZE-waypoint[1])*cellHeight, yellowPaint);
+
         //startZone
         for(int i=0;i<=2;i++)
             for(int j=0;j<=2;j++)
                 canvas.drawRect(i * cellWidth, (ROWS_SIZE - 1 - j) * cellHeight,
                         (i + 1) * cellWidth, (ROWS_SIZE - j) * cellHeight, whitePaint);
 
+
         //goalZone
         for(int i=12;i<=14;i++)
             for(int j=17;j<=19;j++)
                 canvas.drawRect(i * cellWidth, (ROWS_SIZE - 1 - j) * cellHeight,
                         (i + 1) * cellWidth, (ROWS_SIZE - j) * cellHeight, orangePaint);
+
+
         //Grid drawing
         for (int c = 0; c < COLUMNS_SIZE + 1; c++) {
             canvas.drawLine(c * cellWidth, 0, c * cellWidth, ROWS_SIZE * cellHeight, backgroundPaint);
@@ -140,6 +149,23 @@ public class MazeView extends View {
 
 
 
+    }
+
+    public boolean onTouchEvent(MotionEvent event){
+        if(activityMain.getSettingWaypoint()){
+            int posX = (int)event.getX()/cellWidth;
+            int posY = ROWS_SIZE-1-(int)event.getY()/cellWidth;
+
+            if(posX==waypoint[0] && posY == waypoint[1]){
+                waypoint[0]=-1;
+                waypoint[1]=-1;
+            }else{
+                waypoint[0]=posX;
+                waypoint[1]=posY;
+            }
+            invalidate();
+        }
+        return true;
     }
 
     public void turn(int leftright){
@@ -186,6 +212,7 @@ public class MazeView extends View {
         else if(robotCenter[1] == ROWS_SIZE - 1)
             robotCenter[1] = 18;
 
+        fixcurrentAngle();
         updateMap();
     }
     public void move(int updown){

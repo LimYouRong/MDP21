@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button set_wp_button;
     private Button set_rob_button;
     private Switch switchAuto;
+    private boolean SettingWaypoint = false;
+    private boolean SettingRobot;
 
     private TextView robcoord;
 
@@ -243,6 +245,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
                 sendToBlueToothChat("PC,AN,"+mazeView.getWaypoint()[0]+1+","+mazeView.getWaypoint()[1]+1);
+                if(!SettingWaypoint){
+                    SettingWaypoint=true;
+                    set_wp_button.setText("DONE SETTING");
+                    Log.d("CHangewp","Can change now");
+                }
+                else{
+                    SettingWaypoint=false;
+                    set_wp_button.setText("SET WAYPOINT");
+                }
             }
         });
 
@@ -471,5 +482,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+    public boolean getSettingWaypoint(){
+        return SettingWaypoint;
     }
 }
