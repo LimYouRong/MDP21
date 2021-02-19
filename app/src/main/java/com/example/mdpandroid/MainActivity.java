@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         switchAuto = (Switch) findViewById(R.id.auto_switch) ;
 
         switchAuto.setChecked(true);
-
+        autoUpdate = true;
         switchAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","Left button clicked");
-                sendToBlueToothChat("AR,AN,L");
+                sendToBlueToothChat("AR,AN,L,");
                 mazeView.turn(0);
                 setStatusMessage("Rotating Left");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","right button clicked");
-                sendToBlueToothChat("AR,AN,R");
+                sendToBlueToothChat("AR,AN,R,");
                 mazeView.turn(1);
                 setStatusMessage("Rotating Right");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","up button clicked");
-                sendToBlueToothChat("AR,AN,1");
+                sendToBlueToothChat("AR,AN,1,");
                 mazeView.move(0);
                 setStatusMessage("Moving Forward");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","down button clicked");
-                sendToBlueToothChat("AR,AN,B");
+                sendToBlueToothChat("AR,AN,B,");
                 mazeView.move(1);
                 setStatusMessage("Rotating");
                 robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //https://developer.android.com/reference/android/hardware/SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 50000000);
         tiltSwitch = (Switch) findViewById(R.id.tilt_switch);
         tiltSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -345,12 +345,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         public void onReceive(Context context, Intent intent) {
             String theMessage = intent.getStringExtra("bluetoothMessage");
             Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
-            updateBluetoothChat(1,theMessage);
 
-            if(theMessage == "Complete"){
-                //change status back to stopped
 
+            if(theMessage.equals("Finish")){
+                setStatusMessage("WAITING");
             }
+            updateBluetoothChat(1,theMessage);
 
         }
     };
@@ -454,16 +454,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //move robot only if tilt has been enabled
             if (y < -5) {
                 //device has been tilted forward
+                sendToBlueToothChat("AR,AN,1,");
                 mazeView.move(0);
                 setStatusMessage("Moving Forward");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             } else if (x < -5) {
                 //device has been tilted to the right
+                sendToBlueToothChat("AR,AN,R,");
                 mazeView.turn(1);
                 setStatusMessage("Rotating Right");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             } else if (x > 5) {
                 //device has been tilted to the left
+                sendToBlueToothChat("AR,AN,L,");
                 mazeView.turn(0);
                 setStatusMessage("Rotating Left");
+                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         }
     }
