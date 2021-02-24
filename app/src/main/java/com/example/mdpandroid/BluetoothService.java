@@ -178,7 +178,6 @@ public class BluetoothService {
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        //tested
         bundle.putString(Constants.DEVICE_NAME, device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
@@ -190,7 +189,6 @@ public class BluetoothService {
      * Stop all threads
      */
     public synchronized void stop() {
-        Log.d(TAG, "stop");
 
         if (mConnectThread != null) {
             mConnectThread.cancel();
@@ -214,11 +212,6 @@ public class BluetoothService {
         mState = STATE_NONE;
         // Update UI title
         updateUserInterfaceTitle();
-        //Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        //Bundle bundle = new Bundle();
-        //bundle.putString(Constants.DEVICE_NAME, "");
-        //msg.setData(bundle);
-        //mHandler.sendMessage(msg);
     }
 
     /**

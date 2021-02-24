@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     //user did not type anything
                     Toast.makeText(MainActivity.this, "Text field is empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateBluetoothChat(0,message);
+//                    updateBluetoothChat(0,message);
                     chatboxEditText.setText("");
                     sendToBlueToothChat(message);
                 }
@@ -379,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void updateBluetoothChat(int id,String msg){
         Message msgOut = new Message(id,msg);
 //        Message msgOut = new Message(0, message); //id = 0 because user is the one who sent this message
-        //append current message to arraylist
         messageList.add(messageList.size(), msgOut);
         messageAdapter.notifyDataSetChanged();
 
@@ -392,7 +391,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         public void onReceive(Context context, Intent intent) {
             String theMessage = intent.getStringExtra("bluetoothMessage");
             Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
-
 
             if(theMessage.equals("Finish")){
                 setStatusMessage("WAITING");
