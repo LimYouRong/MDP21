@@ -21,12 +21,16 @@ public class MazeView extends View {
     private Cell[][] cells;
     private int[] robotCenter = {1, 1};// x,y
     private int[] waypoint = {1, 1};
-    private Paint lightBluePaint;
-    private Paint darkBluePaint;
-    private Paint whitePaint;
-    private Paint orangePaint;
-    private Paint backgroundPaint;
-    private Paint yellowPaint;
+    private int[] touchPos = {-1,-1};
+    private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
+    private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
+    private Paint lightBluePaint = new Paint();
+    private Paint bluePaint = new Paint();
+    private Paint darkBluePaint = new Paint();
+    private Paint whitePaint = new Paint();
+    private Paint orangePaint = new Paint();
+    private Paint backgroundPaint = new Paint();
+    private Paint yellowPaint = new Paint();
     private int cellWidth;
     private int cellHeight;
     MainActivity activityMain = (MainActivity) getContext();
@@ -44,6 +48,7 @@ public class MazeView extends View {
         }
     }
     public int [] getWaypoint(){
+        Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
         return waypoint;
     }
     public void setWaypoint(int [] waypoint){
@@ -52,16 +57,10 @@ public class MazeView extends View {
 
     public MazeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        lightBluePaint = new Paint();
-        darkBluePaint = new Paint();
-        whitePaint = new Paint();
-        orangePaint = new Paint();
-        yellowPaint = new Paint();
-        backgroundPaint = new Paint();
 
         //setting color for all color
-
         lightBluePaint.setColor(Color.parseColor("#E4EDF2"));
+        bluePaint.setColor(Color.parseColor("#6699CC"));
         darkBluePaint.setColor(Color.parseColor("#4E7D96"));
         whitePaint.setColor(Color.WHITE);
         orangePaint.setColor(Color.parseColor("#FF844B"));
@@ -114,6 +113,30 @@ public class MazeView extends View {
         canvas.drawRect(waypoint[0]*cellWidth, (ROWS_SIZE-1-waypoint[1])*cellHeight,
                 (waypoint[0] + 1) * cellWidth, (ROWS_SIZE-waypoint[1])*cellHeight, yellowPaint);
 
+        //Obstacle
+        for (int y = 0; y < ROWS_SIZE; y++) {
+            for (int x = 0; x < COLUMNS_SIZE; x++) {
+                if (obstacle != null && obstacle[y][x] == 1) {
+                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
+                }
+            }
+        }
+        //EXPLORATION MODE CODE
+//        for (int y = 0; y < ROWS_SIZE; y++) {
+//            for (int x = 0; x < COLUMNS_SIZE; x++) {
+//
+//                //when explored then draw obstacle if any
+//                if (explored != null && explored[x][y] == 1) {
+//                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+//                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  bluePaint);
+//                    if (obstacle != null && obstacle[x][y] == 1) {
+//                        canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+//                                (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
+//                    }
+//                }
+//            }
+//        }
         //startZone
         for(int i=0;i<=2;i++)
             for(int j=0;j<=2;j++)
@@ -152,19 +175,44 @@ public class MazeView extends View {
     }
 
     public boolean onTouchEvent(MotionEvent event){
-        if(activityMain.getSettingWaypoint()){
-            int posX = (int)event.getX()/cellWidth;
-            int posY = ROWS_SIZE-1-(int)event.getY()/cellWidth;
+        if (event.getAction() != MotionEvent.ACTION_DOWN)
+            return true;
+        int posX = (int)event.getX()/cellWidth;
+        int posY = ROWS_SIZE-1-(int)event.getY()/cellWidth;
+        touchPos[0]=posX;
+        touchPos[1]=posY;
+        activityMain.updateCoord();
 
+        if(activityMain.getSettingWaypoint()){
             if(posX==waypoint[0] && posY == waypoint[1]){
-                waypoint[0]=-1;
-                waypoint[1]=-1;
+                waypoint[0]=1;
+                waypoint[1]=1;
             }else{
                 waypoint[0]=posX;
                 waypoint[1]=posY;
+                Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
             }
-            invalidate();
         }
+        else if(activityMain.getSettingRobot()){
+            if(posX == robotCenter[0] && posY == robotCenter[1]){
+                robotCenter[0]=1;
+                robotCenter[1]=1;
+            }else{
+                robotCenter[0]=posX;
+                robotCenter[1]=posY;
+                checkBounds();
+            }
+        }
+        else{
+            if(obstacle[posY][posX]==1){
+                obstacle[posY][posX]=0;
+            }
+            else{
+                obstacle[posY][posX]=1;
+            }
+        }
+
+        invalidate();
         return true;
     }
 
@@ -215,6 +263,31 @@ public class MazeView extends View {
         fixcurrentAngle();
         updateMap();
     }
+    private void checkObstacle(){
+        fixcurrentAngle();
+        switch(currentAngle){
+            case 0:
+                if (obstacle[robotCenter[1]+1][robotCenter[0]]==1 || obstacle[robotCenter[1]+1][robotCenter[0]-1]==1 || obstacle[robotCenter[1]+1][robotCenter[0]+1]==1){
+                    robotCenter[1]-=1;
+                }
+                break;
+            case 90:
+                if (obstacle[robotCenter[1]][robotCenter[0]+1]==1 || obstacle[robotCenter[1]+1][robotCenter[0]+1]==1 || obstacle[robotCenter[1]-1][robotCenter[0]+1]==1){
+                    robotCenter[0]-=1;
+                }
+                break;
+            case 180:
+                if (obstacle[robotCenter[1]-1][robotCenter[0]]==1 || obstacle[robotCenter[1]-1][robotCenter[0]+1]==1 || obstacle[robotCenter[1]-1][robotCenter[0]-1]==1){
+                    robotCenter[1]+=1;
+                }
+                break;
+            case 270:
+                if (obstacle[robotCenter[1]][robotCenter[0]-1]==1 || obstacle[robotCenter[1]-1][robotCenter[0]-1]==1 || obstacle[robotCenter[1]+1][robotCenter[0]-1]==1){
+                    robotCenter[0]+=1;
+                }
+                break;
+        }
+    }
     public void move(int updown){
         if(updown ==0){
 //            robotCenter[0] = col;   //X coord
@@ -246,6 +319,11 @@ public class MazeView extends View {
 
         }
         checkBounds();
+        checkObstacle();
+        fixcurrentAngle();
+    }
+    public int[] getTouchPos(){
+        return touchPos;
     }
     public int[] getCurrentPosition(){
         Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
@@ -260,6 +338,22 @@ public class MazeView extends View {
         if(activityMain.autoUpdate){
             invalidate();
         }
+    }
+    public void resetMap(){
+        robotCenter[0]=1;
+        robotCenter[1]=1;
+        robotFront[0]=1;
+        robotFront[1]=2;
+        currentAngle=0;
+        waypoint[0]=1;
+        waypoint[1]=1;
+        for(int x=0;x<ROWS_SIZE;x++){
+            for(int y=0;y<COLUMNS_SIZE;y++){
+                explored[x][y]=0;
+                obstacle[x][y]=0;
+            }
+        }
+        invalidate();
     }
 
 

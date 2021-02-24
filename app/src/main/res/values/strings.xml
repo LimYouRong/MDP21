@@ -9,12 +9,11 @@
     <string name="waypt_t">Waypoint Coordinates:</string>
     <string name="setwp">SET WAYPOINT</string>
     <string name="robcoord_t">Robot Coordinates:</string>
+    <string name="touchcoord_t">Touch Coordinates:</string>
     <string name="setrob">SET POSITION</string>
     <string name="auto">AUTO</string>
     <string name="tilt">TILT</string>
-    <string name="f1">F1</string>
-    <string name="f2">F2</string>
-    <string name="reconf">RECONFIGURE</string>
+    <string name="reconf">RESET</string>
     <string name="load_map">LOAD MAP</string>
     <string name="send_map">SEND MAP</string>
 

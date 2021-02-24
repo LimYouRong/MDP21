@@ -204,7 +204,7 @@
             <Button
                 android:id="@+id/explore_button"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#FFFFFF"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -220,7 +220,7 @@
             <Button
                 android:id="@+id/fastest_button"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#ffffff"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -236,7 +236,7 @@
             <Button
                 android:id="@+id/calibrate_button"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#ffffff"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -251,6 +251,7 @@
 
             <Button
                 android:id="@+id/refresh_button"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -305,7 +306,7 @@
             <Button
                 android:id="@+id/set_wp_button"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#ffffff"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -361,7 +362,7 @@
             <Button
                 android:id="@+id/set_rob_button"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#ffffff"
+                app:backgroundTint="@color/button_state"
                 android:layout_width="159dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
@@ -418,11 +419,11 @@
                 android:layout_height="17.6dp"
                 android:layout_below="@+id/auto_switch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="9dp"
                 android:layout_marginEnd="83dp"
                 android:background="#F4F5FB"
                 android:gravity="top"
-                android:text="@string/robcoord_t"
+                android:text="@string/touchcoord_t"
                 android:textAppearance="@style/roboto"
                 android:textStyle="bold" />
 
@@ -432,7 +433,7 @@
                 android:layout_height="17.6dp"
                 android:layout_below="@+id/auto_switch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="31dp"
                 android:layout_marginEnd="64dp"
                 android:background="#F4F5FB"
                 android:gravity="center_horizontal"
@@ -475,7 +476,7 @@
 <!--                app:backgroundTint="#ffffff" />-->
 
             <Button
-                android:id="@+id/reconf_button"
+                android:id="@+id/reset_button"
                 style="@style/Widget.MaterialComponents.Button"
                 app:backgroundTint="#ffffff"
                 android:layout_width="159dp"
