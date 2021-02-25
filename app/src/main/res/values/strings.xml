@@ -16,5 +16,5 @@
     <string name="reconf">RESET</string>
     <string name="load_map">LOAD MAP</string>
     <string name="send_map">SEND MAP</string>
-
+    <string name="set_obs">Add Obstacle</string>
 </resources>

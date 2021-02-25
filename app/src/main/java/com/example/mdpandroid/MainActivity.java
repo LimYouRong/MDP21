@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Switch switchAuto;
     private boolean SettingWaypoint = false;
     private boolean SettingRobot;
+    private Button set_obs_button;
 
     private TextView robcoord;
     private TextView coord;
@@ -90,17 +91,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
         setContentView(R.layout.activity_main);
 
         //nav bar
@@ -166,13 +156,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","Explore button clicked");
+                sendToBlueToothChat("PC,AN,startexp");
+                setStatusMessage("Exploration in progress");
+
             }
         });
         fastest_button = findViewById(R.id.fastest_button);
         fastest_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAGGGGGGGGGGGG","fastest button clicked");
+
+                Log.d("TAGGGGGGGGGGGG","fastest button clicked"+mazeView.getWaypoint()[0]+","+ mazeView.getWaypoint()[1]);
+                sendToBlueToothChat("PC,AN,startfp");
+                setStatusMessage("Fastest Path in progress");
             }
         });
 
@@ -182,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         set_wp_button = findViewById(R.id.set_wp_button);
         set_rob_button = findViewById(R.id.set_rob_button);
         reset_button = findViewById(R.id.reset_button);
+        set_obs_button = findViewById(R.id.set_obs_button);
 
         //initialize components
         deviceName = (TextView) findViewById(R.id.deviceName);
@@ -195,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         robcoord.setText("X:-- Y:--");
         final TextView wayPtText = findViewById(R.id.waypt);
 
-        //TODO Set onclick listeners for them later
-        //CHECK WITH TEAM WHAT CONTROLS THEY WANT AVAILABLE
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,11 +225,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         downButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mazeView.realTimeObstacleCheck("2 2 2 4 1 0");
                 Log.d("TAGGGGGGGGGGGG","down button clicked");
-                sendToBlueToothChat("AR,AN,B,");
-                mazeView.move(1);
-                setStatusMessage("Rotating");
-                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+//                sendToBlueToothChat("AR,AN,B,");
+//                mazeView.move(1);
+//                setStatusMessage("Rotating");
+//                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
             }
         });
 
@@ -250,24 +246,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //
 //                wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
 //                sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1));
-                if(!SettingWaypoint){
-                    SettingWaypoint=true;
-                    set_wp_button.setText("DONE SETTING");
-                    set_rob_button.setEnabled(false);
-                    Log.d("CHangewp","Can change now");
-                }
-                else{
-                    SettingWaypoint=false;
+//                if(!SettingWaypoint){
+//                    SettingWaypoint=true;
+//                    set_wp_button.setText("Save Setting");
+//                    set_rob_button.setEnabled(false);
+//                    Log.d("CHangewpppppppppppppppppppp","Changing");
+//
+//                    wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
+//
+//                }
+//                else{
+//                    SettingWaypoint=false;
+                    mazeView.setWaypoint(mazeView.getTouchPos());
                     wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
-                    sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1));
-                    set_wp_button.setText("SET WAYPOINT");
-                    set_rob_button.setEnabled(true);
-                }
+                    sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1)+",");
+
+                    //PC,AN,10,20
+//                    set_wp_button.setText("SET WAYPOINT");
+//                    set_rob_button.setEnabled(true);
+//                }
             }
         });
 
 
-        set_rob_button.setOnClickListener(new View.OnClickListener() {
+        set_rob_button.setOnClickListener(new View.OnClickListener() {//to test
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","setrobbutton button");
@@ -275,18 +277,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                mazeView.setCurrentPosition(new int[]{5, 5});
 //                robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
 //                sendToBlueToothChat("PC,AN,"+ (mazeView.getCurrentPosition()[0]+1)+","+(mazeView.getCurrentPosition()[1]+1));
-                if(!SettingRobot){
-                    SettingRobot=true;
-                    set_rob_button.setText("DONE SETTING");
-                    set_wp_button.setEnabled(false);
-                    Log.d("CHangerob","Can change now");
-                }
-                else{
-                    SettingRobot=false;
-                    robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
-                    set_rob_button.setText("SET POSITION");
-                    set_wp_button.setEnabled(true);
-                }
+//                if(!SettingRobot){
+//                    SettingRobot=true;
+//                    set_rob_button.setText("DONE SETTING");
+//                    set_wp_button.setEnabled(false);
+//                    Log.d("CHangerob","Can change now");
+//                }
+//                else{
+//                    SettingRobot=false;
+//                    robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
+//                    set_rob_button.setText("SET POSITION");
+//                    set_wp_button.setEnabled(true);
+//                }
+                mazeView.setCurrentPosition(mazeView.getTouchPos());
+                robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
+
             }
         });
 
@@ -303,6 +308,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mazeView.resetMap();
                 robcoord.setText("X:-- Y:--");
                 wayPtText.setText("X:-- Y:--");
+            }
+        });
+        set_obs_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+//                mazeView
+                mazeView.setObstacle(mazeView.getTouchPos()[0],mazeView.getTouchPos()[1]);
             }
         });
 
@@ -391,10 +403,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         public void onReceive(Context context, Intent intent) {
             String theMessage = intent.getStringExtra("bluetoothMessage");
             Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
-
             if(theMessage.equals("Finish")){
                 setStatusMessage("WAITING");
             }
+            //TODO YOURONG
+            else if(theMessage.equals("TEST")){
+//                mazeView.realTimeObstacleCheck(theMessage);
+            }
+            //else if message starts with
+            //update map
+            //TODO JIAWEN
+//            else if message starts with MDF|hexadecimal stuff
+            //update map
             updateBluetoothChat(1,theMessage);
 
         }
@@ -439,28 +459,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     };
     private void setStatusMessage(String message){
-//        findViewById(R.id.robot_sta);
         robot_staText = findViewById(R.id.robot_sta);
         robot_staText.setText(message);
 
 
     }
-
-//    //to send bluetoothactivity for moving robot
-//    public void joystickBluetoothMessage(String msg) {
-//        Intent intent = new Intent("getCtrlToSend");
-//        // You can also include some extra data.
-//        if (msg.equals("AR,AN,F")) {
-//            statusTv.setText("Moving Forward");
-//        } else if (msg.equals("AR,AN,R")){
-//            statusTv.setText("Turning Right");
-//        } else if (msg.equals("AR,AN,L")){
-//            statusTv.setText("Turning Left");
-//        }
-//        intent.putExtra("control", msg);
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-//    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -492,7 +495,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-//        Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^",_tilt+"");
         if (_tilt) {
             float x = event.values[0];
             float y = event.values[1];
@@ -523,12 +525,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-    public boolean getSettingWaypoint(){
-        return SettingWaypoint;
-    }
-    public boolean getSettingRobot(){
-        return SettingRobot;
-    }
+//    public boolean getSettingWaypoint(){
+//        return SettingWaypoint;
+//    }
+//    public boolean getSettingRobot(){
+//        return SettingRobot;
+//    }
     public void updateCoord(){
         coord = (TextView)findViewById(R.id.coord);
         coord.setText("X:"+(mazeView.getTouchPos()[0]+1)+" Y:"+(mazeView.getTouchPos()[1]+1));

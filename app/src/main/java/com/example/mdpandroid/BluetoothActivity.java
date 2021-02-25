@@ -63,7 +63,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private String device;
 
     public static BluetoothService btService = null;
-    public static StringBuffer mOutStringBuffer;
+//    public static StringBuffer mOutStringBuffer;
 
     private ArrayAdapter<String> newDevicesArrayAdapter;
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
@@ -389,15 +389,16 @@ public class BluetoothActivity extends AppCompatActivity {
             startActivityForResult(enableIntent, 200);
             // Otherwise, setup the chat session
         } else if (btService == null) {
-            setupChat();
+            btService = new BluetoothService(getApplicationContext(), mHandler);
+//            setupChat();
         }
     }
 
     // Initialize the BluetoothService to perform bluetooth connections
-    private void setupChat(){
-        btService = new BluetoothService(getApplicationContext(), mHandler);
-        mOutStringBuffer = new StringBuffer("");
-    }
+//    private void setupChat(){
+//
+////        mOutStringBuffer = new StringBuffer("");
+//    }
 
     /**
      * The Handler that gets information back from the BluetoothService
@@ -504,8 +505,8 @@ public class BluetoothActivity extends AppCompatActivity {
                 btService.write(send);
 
                 // Reset out string buffer to zero
-                mOutStringBuffer.setLength(0);
-
+//                mOutStringBuffer.setLength(0);
+                Log.d("&&&&&&&&&&&&&&&&&&&&&&&&&","resetted");
             }
         }
     };
@@ -524,7 +525,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 //send out message
                 byte[] send = control.getBytes();
                 btService.write(send);
-                mOutStringBuffer.setLength(0);
+//                mOutStringBuffer.setLength(0);
 
             }
         }

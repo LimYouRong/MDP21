@@ -443,21 +443,21 @@
                 android:textColor="#FF844B"
                 android:textStyle="bold" />
 
-<!--            <Button-->
-<!--                android:id="@+id/F1_button"-->
-<!--                style="@style/Widget.MaterialComponents.Button"-->
-<!--                android:layout_width="75dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_below="@+id/auto_switch"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:layout_marginEnd="131dp"-->
-<!--                android:elevation="13dp"-->
-<!--                android:text="@string/f1"-->
-<!--                android:textAppearance="@style/roboto"-->
-<!--                android:textColor="@color/txt"-->
-<!--                android:textStyle="bold"-->
-<!--                app:backgroundTint="#ffffff" />-->
+            <Button
+                android:id="@+id/set_obs_button"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="75dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/auto_switch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="131dp"
+                android:elevation="13dp"
+                android:text="@string/set_obs"
+                android:textAppearance="@style/roboto"
+                android:textColor="@color/txt"
+                android:textStyle="bold"
+                app:backgroundTint="#ffffff" />
 
 <!--            <Button-->
 <!--                android:id="@+id/F2_button"-->

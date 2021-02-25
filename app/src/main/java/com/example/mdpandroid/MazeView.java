@@ -182,35 +182,38 @@ public class MazeView extends View {
         touchPos[0]=posX;
         touchPos[1]=posY;
         activityMain.updateCoord();
-
-        if(activityMain.getSettingWaypoint()){
-            if(posX==waypoint[0] && posY == waypoint[1]){
-                waypoint[0]=1;
-                waypoint[1]=1;
-            }else{
-                waypoint[0]=posX;
-                waypoint[1]=posY;
-                Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
-            }
-        }
-        else if(activityMain.getSettingRobot()){
-            if(posX == robotCenter[0] && posY == robotCenter[1]){
-                robotCenter[0]=1;
-                robotCenter[1]=1;
-            }else{
-                robotCenter[0]=posX;
-                robotCenter[1]=posY;
-                checkBounds();
-            }
-        }
-        else{
-            if(obstacle[posY][posX]==1){
-                obstacle[posY][posX]=0;
-            }
-            else{
-                obstacle[posY][posX]=1;
-            }
-        }
+        Log.d("PPPPPPPPPPPPPPPPPPPP",touchPos[0]+" AND "+touchPos[1]);
+//        if(activityMain.getSettingWaypoint()){
+//            waypoint[0] = posX;
+//            waypoint[1] = posY;
+////
+////            if(posX==waypoint[0] && posY == waypoint[1]){
+////                waypoint[0]=1;
+////                waypoint[1]=1;
+////            }else{
+////                waypoint[0]=posX;
+////                waypoint[1]=posY;
+////                Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
+////            }
+//        }
+//        else if(activityMain.getSettingRobot()){
+//            if(posX == robotCenter[0] && posY == robotCenter[1]){
+//                robotCenter[0]=1;
+//                robotCenter[1]=1;
+//            }else{
+//                robotCenter[0]=posX;
+//                robotCenter[1]=posY;
+//                checkBounds();
+//            }
+//        }
+//        else{
+//            if(obstacle[posY][posX]==1){
+//                obstacle[posY][posX]=0;
+//            }
+//            else{
+//                obstacle[posY][posX]=1;
+//            }
+//        }
 
         invalidate();
         return true;
@@ -224,6 +227,118 @@ public class MazeView extends View {
         }
         fixcurrentAngle();
         updateMap();
+    }
+    public void realTimeObstacleCheck(String message){
+//        message = "2 2 2 4 2 0";
+        String[] splitStr = message.split("\\s+");
+        Log.d("TTTTTTTTTTTTTTTTTTTTT0",splitStr[0]);
+        Log.d("TTTTTTTTTTTTTTTTTTTTT1",splitStr[1]);
+        Log.d("TTTTTTTTTTTTTTTTTTTTT2",splitStr[2]);
+        Log.d("TTTTTTTTTTTTTTTTTTTTT3",splitStr[3]);
+        Log.d("TTTTTTTTTTTTTTTTTTTTT4",splitStr[4]);
+        Log.d("TTTTTTTTTTTTTTTTTTTTT5",splitStr[5]);
+        //x = robotCenter[0] y = robotCenter[1]
+        Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
+
+        int num0 = Integer.parseInt(splitStr[0]);
+        int num1 = Integer.parseInt(splitStr[1]);
+        int num2 = Integer.parseInt(splitStr[2]);
+        int num3 = Integer.parseInt(splitStr[3]);
+        int num4 = Integer.parseInt(splitStr[4]);
+        int num5 = Integer.parseInt(splitStr[5]);
+
+        if (num0 != 2){
+            Log.d("oooooooooooooooooo","First Sensor");
+                        FirstSensor(num0);
+        }
+        if(num1 !=2){
+            Log.d("oooooooooooooooooo","Second Sensor");
+            SecondSensor(num1);
+        }
+        if(num2 !=2){
+            Log.d("oooooooooooooooooo","Third Sensor");
+            ThirdSensor(num2);
+        }
+        if(num3 !=4){
+            Log.d("oooooooooooooooooo","Fourth Sensor");
+            FourthSensor(num3);
+        }
+        if (num4 !=2){
+            Log.d("oooooooooooooooooo","Fifth Sensor");
+            FifthSensor(num4);
+        }
+        if(num5 != 2){
+            Log.d("oooooooooooooooooo","Sixth Sensor");
+            SixthSensor(num5);
+        }
+
+    }
+    private void FirstSensor(int num0){
+        if (currentAngle == 0){
+            setObstacle(robotCenter[0]-1, (robotCenter[1]+num0+2));
+        }else if(currentAngle == 90){
+            setObstacle(robotCenter[0]+num0+2,robotCenter[1]+1);
+        }else if(currentAngle == 180){
+            setObstacle(robotCenter[0]+1,robotCenter[1]-(num0+2));
+        }else{//270
+            setObstacle(robotCenter[0]-(num0+2),robotCenter[1]-1);
+        }
+    }
+    private void SecondSensor(int num1){
+        if (currentAngle == 0){
+            setObstacle(robotCenter[0], (robotCenter[1]+num1+2));
+        }else if(currentAngle == 90){
+            setObstacle(robotCenter[0]+num1+2,robotCenter[1]);
+        }else if(currentAngle == 180){
+            setObstacle(robotCenter[0],robotCenter[1]-(num1+2));
+        }else{//270
+            setObstacle(robotCenter[0]-(num1+2),robotCenter[1]);
+        }
+    }
+    private void ThirdSensor(int num2){
+        if (currentAngle == 0){
+            setObstacle(robotCenter[0]+1, (robotCenter[1]+num2+2));
+        }else if(currentAngle == 90){
+            setObstacle(robotCenter[0]+num2+2,robotCenter[1]-1);
+        }else if(currentAngle == 180){
+            setObstacle(robotCenter[0]-1,robotCenter[1]-(num2+2));
+        }else{//270
+            setObstacle(robotCenter[0]-(num2+2),robotCenter[1]+1);
+        }
+    }
+    private void FourthSensor(int num3){
+//        if(splitStr[3]!="4"){
+            if (currentAngle == 0){
+                setObstacle(robotCenter[0]+2+num3,robotCenter[1]+1);
+            }else if(currentAngle == 90){
+                setObstacle(robotCenter[0]+1,robotCenter[1]-(2+num3));
+            }else if(currentAngle == 180){
+                setObstacle(robotCenter[0]-(2+num3),robotCenter[1]-1);
+            }else{//270
+                setObstacle(robotCenter[0]-1,robotCenter[1]+2+num3);
+            }
+    }
+    private void FifthSensor(int num4){
+        if (currentAngle ==0){
+            setObstacle(robotCenter[0]-(2+num4),robotCenter[1]+1);
+        }else if(currentAngle == 90){
+            setObstacle(robotCenter[0]+1,robotCenter[1]+2+num4);
+        }else if(currentAngle == 180){
+            setObstacle(robotCenter[0]+2+num4,robotCenter[1]-1);
+        }else{
+            setObstacle(robotCenter[0]-1,robotCenter[1]-(2+num4));
+        }
+    }
+    private void SixthSensor(int num5){
+        if (currentAngle ==0){
+            setObstacle(robotCenter[0]-(2+num5),robotCenter[1]-1);
+        }else if(currentAngle == 90){
+            setObstacle(robotCenter[0]-1,robotCenter[1]+2+num5);
+        }else if(currentAngle == 180){
+            setObstacle(robotCenter[0]+2+num5,robotCenter[1]+1);
+        }else{
+            setObstacle(robotCenter[0]+1,robotCenter[1]-(2+num5));
+        }
     }
     private void fixcurrentAngle(){
         if(currentAngle<0){
@@ -338,6 +453,16 @@ public class MazeView extends View {
         if(activityMain.autoUpdate){
             invalidate();
         }
+    }
+    public void setObstacle(int y, int x){
+        if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
+            obstacle[x][y]=1;
+            updateMap();
+        }else{
+            Log.d("QQQQQQQQQQQQQQQQQ","OBS outside of cells");
+        }
+
+
     }
     public void resetMap(){
         robotCenter[0]=1;
