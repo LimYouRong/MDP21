@@ -14,7 +14,6 @@
     <string name="auto">AUTO</string>
     <string name="tilt">TILT</string>
     <string name="reconf">RESET</string>
-    <string name="load_map">LOAD MAP</string>
-    <string name="send_map">SEND MAP</string>
-    <string name="set_obs">Add Obstacle</string>
+    <string name="set_obs">ADD OBSTACLE</string>
+    <string name="set_number_grid">Add NUMBER GRID</string>
 </resources>

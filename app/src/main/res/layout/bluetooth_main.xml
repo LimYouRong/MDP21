@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#F5F6FB">
 
 
         <TextView
@@ -18,7 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:fontFamily="sans-serif-condensed" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"/>
 
         <ListView
             android:id="@+id/devicesListView"
@@ -30,14 +33,19 @@
         <TextView
             android:id="@+id/emptyTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textViewNew"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:fontFamily="sans-serif-condensed" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/newDevicesListView"
@@ -48,33 +56,42 @@
 
         <Button
             android:id="@+id/scanPairedButton"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:background="@drawable/commonbutton"
             android:text="Refresh Devices"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/scanNewButton"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:background="@drawable/commonbutton"
             android:text="Scan Devices"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/enableDiscoverableBtn"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:background="@drawable/commonbutton"
             android:text="Enable Discoverable"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"  />
 
     </LinearLayout>
 

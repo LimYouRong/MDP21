@@ -33,10 +33,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -147,9 +152,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        load_mapBtn = findViewById(R.id.load_map);
-        send_mapBtn = findViewById(R.id.send_map);
-
 
         explore_button = findViewById(R.id.explore_button);
         explore_button.setOnClickListener(new View.OnClickListener() {
@@ -240,30 +242,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v){
                 Log.d("TAGGGGGGGGGGGG","setwaypoint button");
-                //TODO Change line below to retrieve current pressed map box
-//                mazeView.setWaypoint(new int[]{2, 2});
-//                Log.d("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",mazeView.getWaypoint()[0]+" : "+ mazeView.getWaypoint()[1] );
-//
-//                wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
-//                sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1));
-//                if(!SettingWaypoint){
-//                    SettingWaypoint=true;
-//                    set_wp_button.setText("Save Setting");
-//                    set_rob_button.setEnabled(false);
-//                    Log.d("CHangewpppppppppppppppppppp","Changing");
-//
-//                    wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
-//
-//                }
-//                else{
-//                    SettingWaypoint=false;
                     mazeView.setWaypoint(mazeView.getTouchPos());
                     wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
                     sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1)+",");
+                    mazeView.invalidate();
 
-                    //PC,AN,10,20
-//                    set_wp_button.setText("SET WAYPOINT");
-//                    set_rob_button.setEnabled(true);
 //                }
             }
         });
@@ -273,25 +256,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","setrobbutton button");
-//                TODO Change line below to retrieve current pressed map box
-//                mazeView.setCurrentPosition(new int[]{5, 5});
-//                robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
-//                sendToBlueToothChat("PC,AN,"+ (mazeView.getCurrentPosition()[0]+1)+","+(mazeView.getCurrentPosition()[1]+1));
-//                if(!SettingRobot){
-//                    SettingRobot=true;
-//                    set_rob_button.setText("DONE SETTING");
-//                    set_wp_button.setEnabled(false);
-//                    Log.d("CHangerob","Can change now");
-//                }
-//                else{
-//                    SettingRobot=false;
-//                    robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
-//                    set_rob_button.setText("SET POSITION");
-//                    set_wp_button.setEnabled(true);
-//                }
                 mazeView.setCurrentPosition(mazeView.getTouchPos());
                 robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
-
+                mazeView.invalidate();
             }
         });
 
@@ -403,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         public void onReceive(Context context, Intent intent) {
             String theMessage = intent.getStringExtra("bluetoothMessage");
             Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
+
             if(theMessage.equals("Finish")){
                 setStatusMessage("WAITING");
             }
@@ -414,6 +382,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //update map
             //TODO JIAWEN
 //            else if message starts with MDF|hexadecimal stuff
+            if(theMessage.regionMatches(0,"MDF|",0,4)){
+                findStr1Str2(theMessage);
+            }
             //update map
             updateBluetoothChat(1,theMessage);
 
@@ -458,6 +429,46 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
     };
+
+    private void findStr1Str2(String theMessage){
+        String[] split = theMessage.split("\\|");
+        String mdf1=hexToBinary(split[1]);
+        String mdf2=hexToBinary(split[2]);
+
+        int row=0;
+        int column=0;
+        int obsPointer=0;
+        for(int i=0;i<mdf1.length();i++){
+            try {
+                if(mdf1.charAt(i)=='1'){
+                    System.out.println("Explored "+row+column);
+                    if(mdf2.charAt(obsPointer)=='1'){
+                        System.out.println("Obstacle "+row+column);
+                    }
+                    obsPointer++;
+                }
+                else{
+                    System.out.println("Unexplored "+row+column);
+                }
+                if(column==14){
+                    column=0;
+                    row++;
+                }else column++;}
+            catch(StringIndexOutOfBoundsException e){
+                if(column==14){
+                    column=0;
+                    row++;
+                }else column++;
+                continue;
+            }
+        }
+        return;
+    }
+
+    private String hexToBinary(String str){
+        return new BigInteger(str,16).toString(2);
+    }
+
     private void setStatusMessage(String message){
         robot_staText = findViewById(R.id.robot_sta);
         robot_staText.setText(message);

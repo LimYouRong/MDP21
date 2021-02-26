@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#F5F6FB">
 
 
         <TextView
@@ -20,12 +21,15 @@
 
         <Button
             android:id="@+id/button1"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/commonbutton"
             android:text="Send Custom Message 1"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"  />
 
         <TextView
             android:id="@+id/textView5"
@@ -46,12 +50,15 @@
 
         <Button
             android:id="@+id/button2"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/commonbutton"
             android:text="Send Custom Message 2"
-            android:textColor="#F5F5F5" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"  />
 
         <TextView
             android:id="@+id/textView6"
@@ -77,21 +84,27 @@
 
         <Button
             android:id="@+id/buttonEdit"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/commonbutton"
             android:text="Edit"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"  />
 
         <Button
             android:id="@+id/buttonSave"
+            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/button_state"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/commonbutton"
             android:text="Save"
-            android:textColor="#FFFFFF" />
+            android:textAppearance="@style/roboto"
+            android:textColor="#4E7D96"
+            android:textStyle="bold"  />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

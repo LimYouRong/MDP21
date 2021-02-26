@@ -63,21 +63,21 @@
                 android:layout_height="wrap_content">
 
             <Button
-                    android:id="@+id/load_map"
+                    android:id="@+id/set_number_grid"
                     android:layout_width="139dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="50dp"
-                    android:layout_toEndOf="@+id/send_map"
+                    android:layout_toEndOf="@+id/set_obs_button"
                     android:background="@drawable/button_2"
                     android:elevation="13dp"
-                    android:text="@string/load_map"
+                    android:text="@string/set_number_grid"
                     android:textAppearance="@style/roboto"
                     android:textColor="#4e7d96" />
 
                 <Button
-                    android:id="@+id/send_map"
+                    android:id="@+id/set_obs_button"
                     android:layout_width="139dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="true"
@@ -86,7 +86,7 @@
                     android:layout_marginTop="50dp"
                     android:background="@drawable/button_2"
                     android:elevation="13dp"
-                    android:text="@string/send_map"
+                    android:text="@string/set_obs"
                     android:textAppearance="@style/roboto"
                     android:textColor="#4e7d96"
                     />
@@ -443,37 +443,6 @@
                 android:textColor="#FF844B"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/set_obs_button"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
-                android:layout_below="@+id/auto_switch"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="131dp"
-                android:elevation="13dp"
-                android:text="@string/set_obs"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold"
-                app:backgroundTint="#ffffff" />
-
-<!--            <Button-->
-<!--                android:id="@+id/F2_button"-->
-<!--                style="@style/Widget.MaterialComponents.Button"-->
-<!--                android:layout_width="75dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_below="@+id/tilt_switch"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:layout_marginEnd="48dp"-->
-<!--                android:elevation="13dp"-->
-<!--                android:text="@string/f2"-->
-<!--                android:textAppearance="@style/roboto"-->
-<!--                android:textColor="@color/txt"-->
-<!--                android:textStyle="bold"-->
-<!--                app:backgroundTint="#ffffff" />-->
 
             <Button
                 android:id="@+id/reset_button"

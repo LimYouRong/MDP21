@@ -13,6 +13,9 @@ import android.widget.RelativeLayout;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 public class MazeView extends View {
 
     private static final int COLUMNS_SIZE = 15;  //Range of X-axis
@@ -20,11 +23,12 @@ public class MazeView extends View {
     private static final float SPACE_WIDTH = 4;
     private Cell[][] cells;
     private int[] robotCenter = {1, 1};// x,y
-    private int[] waypoint = {1, 1};
-    private int[] touchPos = {-1,-1};
+    private int[] waypoint = new int[2];
+    private int[] touchPos = new int[2];
     private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
     private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
     private Paint lightBluePaint = new Paint();
+    private Paint notLightBluePaint = new Paint();
     private Paint bluePaint = new Paint();
     private Paint darkBluePaint = new Paint();
     private Paint whitePaint = new Paint();
@@ -33,6 +37,7 @@ public class MazeView extends View {
     private Paint yellowPaint = new Paint();
     private int cellWidth;
     private int cellHeight;
+    private String[][] numberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
     MainActivity activityMain = (MainActivity) getContext();
 
 
@@ -60,6 +65,7 @@ public class MazeView extends View {
 
         //setting color for all color
         lightBluePaint.setColor(Color.parseColor("#E4EDF2"));
+        notLightBluePaint.setColor(Color.parseColor("#C9E2F0"));
         bluePaint.setColor(Color.parseColor("#6699CC"));
         darkBluePaint.setColor(Color.parseColor("#4E7D96"));
         whitePaint.setColor(Color.WHITE);
@@ -109,6 +115,10 @@ public class MazeView extends View {
             }
         }
 
+        //touchPos
+        canvas.drawRect(touchPos[0]*cellWidth,(ROWS_SIZE-1-touchPos[1])*cellHeight,
+                (touchPos[0]+1)*cellWidth,(ROWS_SIZE-touchPos[1])*cellHeight,bluePaint);
+
         //waypoint
         canvas.drawRect(waypoint[0]*cellWidth, (ROWS_SIZE-1-waypoint[1])*cellHeight,
                 (waypoint[0] + 1) * cellWidth, (ROWS_SIZE-waypoint[1])*cellHeight, yellowPaint);
@@ -122,21 +132,35 @@ public class MazeView extends View {
                 }
             }
         }
+
+        //Numberid drawings on obstacle
+        for (int y = 0; y < ROWS_SIZE; y++) {
+            for (int x = 0; x < COLUMNS_SIZE; x++) {
+                if(numberGrid[y][x]!=null){
+                    String item = numberGrid[y][x];
+                    if(Integer.parseInt(item)<10&&Integer.parseInt(item)>0)
+                        canvas.drawText(item,(x-1)*cellWidth+9,(ROWS_SIZE-y+1)*cellHeight-7,whitePaint);
+                    else if(Integer.parseInt(item)>9&&Integer.parseInt(item)<16)
+                        canvas.drawText(item,(x-1)*cellWidth+6,(ROWS_SIZE-y+1)*cellHeight-7,whitePaint);
+                }
+            }
+        }
+
         //EXPLORATION MODE CODE
-//        for (int y = 0; y < ROWS_SIZE; y++) {
-//            for (int x = 0; x < COLUMNS_SIZE; x++) {
-//
-//                //when explored then draw obstacle if any
-//                if (explored != null && explored[x][y] == 1) {
-//                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
-//                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  bluePaint);
-//                    if (obstacle != null && obstacle[x][y] == 1) {
-//                        canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
-//                                (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
-//                    }
-//                }
-//            }
-//        }
+        for (int y = 0; y < ROWS_SIZE; y++) {
+            for (int x = 0; x < COLUMNS_SIZE; x++) {
+
+                //when explored then draw obstacle if any
+                if (explored != null && explored[y][x] == 1) {
+                    canvas.drawRect(y * cellWidth, (ROWS_SIZE - 1 - x) * cellHeight,
+                            (y + 1) * cellWidth, (ROWS_SIZE - x) * cellHeight,  notLightBluePaint);
+                    if (obstacle != null && obstacle[y][x] == 1) {
+                        canvas.drawRect(y * cellWidth, (ROWS_SIZE - 1 - x) * cellHeight,
+                                (y + 1) * cellWidth, (ROWS_SIZE - x) * cellHeight, darkBluePaint);
+                    }
+                }
+            }
+        }
         //startZone
         for(int i=0;i<=2;i++)
             for(int j=0;j<=2;j++)
@@ -183,37 +207,9 @@ public class MazeView extends View {
         touchPos[1]=posY;
         activityMain.updateCoord();
         Log.d("PPPPPPPPPPPPPPPPPPPP",touchPos[0]+" AND "+touchPos[1]);
-//        if(activityMain.getSettingWaypoint()){
-//            waypoint[0] = posX;
-//            waypoint[1] = posY;
-////
-////            if(posX==waypoint[0] && posY == waypoint[1]){
-////                waypoint[0]=1;
-////                waypoint[1]=1;
-////            }else{
-////                waypoint[0]=posX;
-////                waypoint[1]=posY;
-////                Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
-////            }
-//        }
-//        else if(activityMain.getSettingRobot()){
-//            if(posX == robotCenter[0] && posY == robotCenter[1]){
-//                robotCenter[0]=1;
-//                robotCenter[1]=1;
-//            }else{
-//                robotCenter[0]=posX;
-//                robotCenter[1]=posY;
-//                checkBounds();
-//            }
-//        }
-//        else{
-//            if(obstacle[posY][posX]==1){
-//                obstacle[posY][posX]=0;
-//            }
-//            else{
-//                obstacle[posY][posX]=1;
-//            }
-//        }
+        if(obstacle[posX][posY]==1){
+
+        }
 
         invalidate();
         return true;
@@ -438,7 +434,8 @@ public class MazeView extends View {
         fixcurrentAngle();
     }
     public int[] getTouchPos(){
-        return touchPos;
+        int[] temp=touchPos.clone();
+        return temp;
     }
     public int[] getCurrentPosition(){
         Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
@@ -460,6 +457,28 @@ public class MazeView extends View {
             updateMap();
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","OBS outside of cells");
+        }
+
+
+    }
+
+    public void setExplored(int y, int x){
+        if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
+            explored[x][y]=1;
+            updateMap();
+        }else{
+            Log.d("QQQQQQQQQQQQQQQQQ","explored outside of cells");
+        }
+
+
+    }
+
+    public void setUnexplored(int y, int x){
+        if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
+            explored[x][y]=0;
+            updateMap();
+        }else{
+            Log.d("QQQQQQQQQQQQQQQQQ","unexplored outside of cells");
         }
 
 
