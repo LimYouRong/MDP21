@@ -41,7 +41,7 @@ public class MazeView extends View {
     MainActivity activityMain = (MainActivity) getContext();
 
 
-    //    // robot starting coordinates
+    //robot starting coordinates
     private int[] robotFront = {1, 2}; //x,y
     //currentAngle will change based on control of robot.
     private int currentAngle =0;
@@ -114,7 +114,6 @@ public class MazeView extends View {
                 canvas.drawRect(i*cellWidth,(ROWS_SIZE-1-j)*cellHeight,(i+1)*cellWidth,(ROWS_SIZE-j)*cellHeight,lightBluePaint);
             }
         }
-
         //touchPos
         canvas.drawRect(touchPos[0]*cellWidth,(ROWS_SIZE-1-touchPos[1])*cellHeight,
                 (touchPos[0]+1)*cellWidth,(ROWS_SIZE-touchPos[1])*cellHeight,bluePaint);
@@ -145,7 +144,6 @@ public class MazeView extends View {
                 }
             }
         }
-
         //EXPLORATION MODE CODE
         for (int y = 0; y < ROWS_SIZE; y++) {
             for (int x = 0; x < COLUMNS_SIZE; x++) {
@@ -193,9 +191,6 @@ public class MazeView extends View {
             canvas.drawCircle(robotFront[0] * cellWidth + cellWidth / 2,
                     (ROWS_SIZE - robotFront[1]) * cellHeight - cellHeight / 2, 0.3f * cellWidth, whitePaint);
         }
-
-
-
     }
 
     public boolean onTouchEvent(MotionEvent event){
@@ -206,7 +201,7 @@ public class MazeView extends View {
         touchPos[0]=posX;
         touchPos[1]=posY;
         activityMain.updateCoord();
-        Log.d("PPPPPPPPPPPPPPPPPPPP",touchPos[0]+" AND "+touchPos[1]);
+        Log.d("MAP PRESSED WITH X AND Y",touchPos[0]+" AND "+touchPos[1]);
         if(obstacle[posX][posY]==1){
 
         }

@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         dl.addDrawerListener(t);
         t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
         t.syncState();
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nv = (NavigationView)findViewById(R.id.nv);
         nv.setItemIconTintList(null);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGGGGG","Explore button clicked");
+                Toast.makeText(MainActivity.this, "EXPLORE BUTTON PRESSED", Toast.LENGTH_SHORT).show();
                 sendToBlueToothChat("PC,AN,startexp");
                 setStatusMessage("Exploration in progress");
 
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
 
                 Log.d("TAGGGGGGGGGGGG","fastest button clicked"+mazeView.getWaypoint()[0]+","+ mazeView.getWaypoint()[1]);
+                Toast.makeText(MainActivity.this, "FASTEST BUTTON PRESSED", Toast.LENGTH_SHORT).show();
                 sendToBlueToothChat("PC,AN,startfp");
                 setStatusMessage("Fastest Path in progress");
             }
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAGGGGGGGGGGGG","Left button clicked");
+                Log.d("LEFT BTN TAG","Left button clicked");
                 sendToBlueToothChat("AR,AN,L,");
                 mazeView.turn(0);
                 setStatusMessage("Rotating Left");
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAGGGGGGGGGGGG","right button clicked");
+                Log.d("RIGHT BTN TAG","right button clicked");
                 sendToBlueToothChat("AR,AN,R,");
                 mazeView.turn(1);
                 setStatusMessage("Rotating Right");
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAGGGGGGGGGGGG","up button clicked");
+                Log.d("UP BTN TAG","up button clicked");
                 sendToBlueToothChat("AR,AN,1,");
                 mazeView.move(0);
                 setStatusMessage("Moving Forward");
@@ -227,12 +228,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         downButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mazeView.realTimeObstacleCheck("2 2 2 4 1 0");
-                Log.d("TAGGGGGGGGGGGG","down button clicked");
-//                sendToBlueToothChat("AR,AN,B,");
-//                mazeView.move(1);
-//                setStatusMessage("Rotating");
-//                robcoord.setText("X:"+mazeView.getCurrentPosition()[0]+" Y:"+mazeView.getCurrentPosition()[1]);
+//                mazeView.realTimeObstacleCheck("2 2 2 4 1 0");
+                Log.d("DOWN BTN TAG","down button clicked");
             }
         });
 
@@ -241,13 +238,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         set_wp_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("TAGGGGGGGGGGGG","setwaypoint button");
+                Log.d("WAYPOINT BTN TAG","setwaypoint button");
                     mazeView.setWaypoint(mazeView.getTouchPos());
                     wayPtText.setText("X:"+(mazeView.getWaypoint()[0]+1)+" , Y:"+(mazeView.getWaypoint()[1]+1));
                     sendToBlueToothChat("PC,AN,"+(mazeView.getWaypoint()[0]+1)+","+(mazeView.getWaypoint()[1]+1)+",");
                     mazeView.invalidate();
-
-//                }
             }
         });
 
@@ -255,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         set_rob_button.setOnClickListener(new View.OnClickListener() {//to test
             @Override
             public void onClick(View v) {
-                Log.d("TAGGGGGGGGGGGG","setrobbutton button");
+                Log.d("SET ROB BTN TAG","setrobbutton button");
                 mazeView.setCurrentPosition(mazeView.getTouchPos());
                 robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
                 mazeView.invalidate();
@@ -300,17 +295,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-
         //retrieve intent values
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             if (bundle.containsKey("device")) {
                 device = bundle.getString("device");
                 if(device == null){
-                    Log.d("FindMEEEEEEEEEEEEEEEEE","null");
+                    Log.d("NO DEVICE TAG","NO DEVICE FOUND");
+                    deviceName.setText("Device not Connected ");
                 }
                 else if (!device.equalsIgnoreCase("")) {
-                    Log.d("hehehehehehhehehhhhheh",device);
+                    Log.d("DEVICE NAME TAG",device);
                     //enable all bluetooth-related buttons because there is a device connected
                     deviceName.setText("Connected to: " + device);
                 }
@@ -340,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     //user did not type anything
                     Toast.makeText(MainActivity.this, "Text field is empty", Toast.LENGTH_SHORT).show();
                 } else {
-//                    updateBluetoothChat(0,message);
                     chatboxEditText.setText("");
                     sendToBlueToothChat(message);
                 }
@@ -356,38 +350,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void updateBluetoothChat(int id,String msg){
-        Message msgOut = new Message(id,msg);
-//        Message msgOut = new Message(0, message); //id = 0 because user is the one who sent this message
+        Message msgOut = new Message(id,msg);//id = 0 for user who sent this message, 1 for message received
         messageList.add(messageList.size(), msgOut);
         messageAdapter.notifyDataSetChanged();
 
     }
     //update status whenever connection changes
     private BroadcastReceiver BluetoothMessageReceiver = new BroadcastReceiver() {
-
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String theMessage = intent.getStringExtra("bluetoothMessage");
-            Log.d("MESSAGE FROM MAIN ***************************************",theMessage);
+            Log.d("MESSAGE Received ***************************************",theMessage);
 
             if(theMessage.equals("Finish")){
                 setStatusMessage("WAITING");
             }
-            //TODO YOURONG
-            else if(theMessage.equals("TEST")){
-//                mazeView.realTimeObstacleCheck(theMessage);
+            else if(theMessage.regionMatches(0,"OBS|",0,4)){
+                Log.d("OBS| TAG",theMessage);
+                String []split = theMessage.split("\\|");
+                mazeView.realTimeObstacleCheck(split[1]);
             }
-            //else if message starts with
-            //update map
-            //TODO JIAWEN
-//            else if message starts with MDF|hexadecimal stuff
             if(theMessage.regionMatches(0,"MDF|",0,4)){
                 findStr1Str2(theMessage);
             }
-            //update map
             updateBluetoothChat(1,theMessage);
-
         }
     };
     private BroadcastReceiver BluetoothStatusReceiver = new BroadcastReceiver() {
@@ -536,12 +522,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-//    public boolean getSettingWaypoint(){
-//        return SettingWaypoint;
-//    }
-//    public boolean getSettingRobot(){
-//        return SettingRobot;
-//    }
     public void updateCoord(){
         coord = (TextView)findViewById(R.id.coord);
         coord.setText("X:"+(mazeView.getTouchPos()[0]+1)+" Y:"+(mazeView.getTouchPos()[1]+1));
