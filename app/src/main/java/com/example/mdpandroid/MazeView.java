@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -133,14 +134,16 @@ public class MazeView extends View {
         }
 
         //Numberid drawings on obstacle
+        whitePaint.setTextSize(cellWidth-8);
+        whitePaint.setFlags(Paint.FAKE_BOLD_TEXT_FLAG);
         for (int y = 0; y < ROWS_SIZE; y++) {
             for (int x = 0; x < COLUMNS_SIZE; x++) {
                 if(numberGrid[y][x]!=null){
                     String item = numberGrid[y][x];
                     if(Integer.parseInt(item)<10&&Integer.parseInt(item)>0)
-                        canvas.drawText(item,(x-1)*cellWidth+9,(ROWS_SIZE-y+1)*cellHeight-7,whitePaint);
+                        canvas.drawText(item,(x)*cellWidth+9,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                     else if(Integer.parseInt(item)>9&&Integer.parseInt(item)<16)
-                        canvas.drawText(item,(x-1)*cellWidth+6,(ROWS_SIZE-y+1)*cellHeight-7,whitePaint);
+                        canvas.drawText(item,(x)*cellWidth+6,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                 }
             }
         }
@@ -150,11 +153,11 @@ public class MazeView extends View {
 
                 //when explored then draw obstacle if any
                 if (explored != null && explored[y][x] == 1) {
-                    canvas.drawRect(y * cellWidth, (ROWS_SIZE - 1 - x) * cellHeight,
-                            (y + 1) * cellWidth, (ROWS_SIZE - x) * cellHeight,  notLightBluePaint);
+                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  notLightBluePaint);
                     if (obstacle != null && obstacle[y][x] == 1) {
-                        canvas.drawRect(y * cellWidth, (ROWS_SIZE - 1 - x) * cellHeight,
-                                (y + 1) * cellWidth, (ROWS_SIZE - x) * cellHeight, darkBluePaint);
+                        canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+                                (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
                     }
                 }
             }
@@ -448,7 +451,7 @@ public class MazeView extends View {
     }
     public void setObstacle(int y, int x){
         if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
-            obstacle[x][y]=1;
+            obstacle[y][x]=1;
             updateMap();
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","OBS outside of cells");
@@ -459,7 +462,7 @@ public class MazeView extends View {
 
     public void setExplored(int y, int x){
         if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
-            explored[x][y]=1;
+            explored[y][x]=1;
             updateMap();
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","explored outside of cells");
@@ -470,13 +473,25 @@ public class MazeView extends View {
 
     public void setUnexplored(int y, int x){
         if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
-            explored[x][y]=0;
+            explored[y][x]=0;
             updateMap();
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","unexplored outside of cells");
         }
 
 
+    }
+
+    public void setNumberGrid(String item, int column, int row){
+        if(column>=0 && column<COLUMNS_SIZE && row>=0 && row<ROWS_SIZE){
+            if(obstacle[row-1][column-1]==1){
+                numberGrid[row-1][column-1]=item;
+            }else{
+                Log.d("Not obstacle so no number grid!","X: "+column+" Y: "+row);
+            }
+        }else{
+            Log.d("QQQQQQQQQQQQQQQQQ","numbergrid outside of cells");
+        }
     }
     public void resetMap(){
         robotCenter[0]=1;

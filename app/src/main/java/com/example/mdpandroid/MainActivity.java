@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
 //                mazeView
-                mazeView.setObstacle(mazeView.getTouchPos()[0],mazeView.getTouchPos()[1]);
+                mazeView.setObstacle(mazeView.getTouchPos()[1],mazeView.getTouchPos()[0]);
             }
         });
 
@@ -373,7 +373,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if(theMessage.regionMatches(0,"MDF|",0,4)){
                 findStr1Str2(theMessage);
             }
+
+            if(theMessage.regionMatches(0,"NUM|",0,4)){
+                addNumberGrid(theMessage);
+            }
+            //update map
             updateBluetoothChat(1,theMessage);
+
         }
     };
     private BroadcastReceiver BluetoothStatusReceiver = new BroadcastReceiver() {
@@ -424,35 +430,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int row=0;
         int column=0;
         int obsPointer=0;
-        for(int i=0;i<mdf1.length();i++){
-            try {
+        for(int i=2;i<mdf1.length()-2;i++){
+            //try {
                 if(mdf1.charAt(i)=='1'){
-                    System.out.println("Explored "+row+column);
+                    mazeView.setExplored(row,column);
                     if(mdf2.charAt(obsPointer)=='1'){
-                        System.out.println("Obstacle "+row+column);
+                        mazeView.setObstacle(row,column);
                     }
                     obsPointer++;
                 }
                 else{
-                    System.out.println("Unexplored "+row+column);
+                    mazeView.setUnexplored(row,column);
                 }
                 if(column==14){
                     column=0;
                     row++;
-                }else column++;}
-            catch(StringIndexOutOfBoundsException e){
-                if(column==14){
-                    column=0;
-                    row++;
-                }else column++;
-                continue;
-            }
+                }
+                else column++;
         }
-        return;
     }
 
     private String hexToBinary(String str){
-        return new BigInteger(str,16).toString(2);
+        String ret = "";
+        for(int i = 0; i < str.length(); i++){
+            String tem = new BigInteger(String.valueOf(str.charAt(i)), 16).toString(2);
+            for(int j = 0; j < 4-tem.length(); j++) ret += "0";
+            ret += tem;
+        }
+
+        return ret;
+    }
+
+    private void addNumberGrid(String str){
+        Pattern pattern = Pattern.compile("\\(([^)]+)\\)");
+        Matcher m = pattern.matcher(str);
+        while(m.find()) {
+            String[] splitItem = m.group(1).split(", ");
+            Log.d("Stringitemmmmmmmmmmmmmmmmmmmmmm",m.group(1));
+            mazeView.setNumberGrid(splitItem[0],Integer.parseInt(splitItem[1]),Integer.parseInt(splitItem[2]));
+        }
+        mazeView.invalidate();
+
     }
 
     private void setStatusMessage(String message){
