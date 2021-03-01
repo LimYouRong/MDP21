@@ -505,6 +505,7 @@ public class MazeView extends View {
             for(int y=0;y<COLUMNS_SIZE;y++){
                 explored[x][y]=0;
                 obstacle[x][y]=0;
+                numberGrid[x][y]=null;
             }
         }
         invalidate();
