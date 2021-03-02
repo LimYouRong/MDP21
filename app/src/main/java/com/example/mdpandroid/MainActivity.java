@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button send_mapBtn;
     private Button explore_button;
     private Button fastest_button;
-    private Button calibrate_button;
+    private Button image_recog_button;
     private Button refresh_button;
     private Button set_wp_button;
     private Button set_rob_button;
@@ -174,9 +174,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 setStatusMessage("Fastest Path in progress");
             }
         });
+        image_recog_button = findViewById(R.id.image_recog_button);
+        image_recog_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAGGGGGGGGG", "IMAGE RECOG BUTTON PRESSED");
+                sendToBlueToothChat("PC,AN,startexp");
+                setStatusMessage("Image recog in progress");
+
+            }
+        });
 
 
-        calibrate_button = findViewById(R.id.calibrate_button);
+        image_recog_button = findViewById(R.id.image_recog_button);
         refresh_button = findViewById(R.id.refresh_button);
         set_wp_button = findViewById(R.id.set_wp_button);
         set_rob_button = findViewById(R.id.set_rob_button);

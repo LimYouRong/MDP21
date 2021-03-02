@@ -4,7 +4,7 @@
     <string name="robot_sta">Robot Status:</string>
     <string name="explore">EXPLORE</string>
     <string name="fastest">FASTEST</string>
-    <string name="cali">CALIBRATE</string>
+    <string name="image_recog">Image recog</string>
     <string name="refr">REFRESH</string>
     <string name="waypt_t">Waypoint Coordinates:</string>
     <string name="setwp">SET WAYPOINT</string>
