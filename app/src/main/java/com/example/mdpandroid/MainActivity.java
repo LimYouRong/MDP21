@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.d("TAGGGGGGGGGGGG","Explore button clicked");
                 Toast.makeText(MainActivity.this, "EXPLORE BUTTON PRESSED", Toast.LENGTH_SHORT).show();
                 sendToBlueToothChat("PC,AN,startexp");
+                sendToBlueToothChat("AR,AN,startexp");
                 setStatusMessage("Exploration in progress");
 
             }
@@ -179,7 +180,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGG", "IMAGE RECOG BUTTON PRESSED");
-                sendToBlueToothChat("PC,AN,startexp");
+                sendToBlueToothChat("PC,AN,startIMGexp");
+                sendToBlueToothChat("AR,AN,startIMGexp");
+
                 setStatusMessage("Image recog in progress");
 
             }
@@ -261,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Log.d("SET ROB BTN TAG","setrobbutton button");
-                mazeView.setCurrentPosition(mazeView.getTouchPos());
+                mazeView.setCurrentPosition(mazeView.getTouchPos()[0],mazeView.getTouchPos()[1]);
                 robcoord.setText("X:"+(mazeView.getCurrentPosition()[0]+1)+" Y:"+(mazeView.getCurrentPosition()[1]+1));
                 mazeView.invalidate();
             }
@@ -380,8 +383,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 String []split = theMessage.split("\\|");
                 mazeView.realTimeObstacleCheck(split[1]);
             }
-            if(theMessage.regionMatches(0,"MDF|",0,4)){
+            if(theMessage.regionMatches(0,"MDFshort|",0,4)){
                 findStr1Str2(theMessage);
+                Toast.makeText(MainActivity.this, "MDF SHORT", Toast.LENGTH_SHORT).show();
+            }
+            if(theMessage.regionMatches(0,"MDFlong|",0,4)){
+//                findStr1Str2(theMessage);
+                mdfLong(theMessage);
+                Toast.makeText(MainActivity.this, "MDF LONG", Toast.LENGTH_SHORT).show();
+                Log.d("oooooooooooooooooooooo","mdf long");
             }
 
             if(theMessage.regionMatches(0,"NUM|",0,4)){
@@ -431,33 +441,49 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
     };
+//MDFlong|1|4|3|fffffffffffffffffffffffffffffffffffffffffff8ffffffffffffffffffffffffffffffff|0000000000000400080010c000f0000000000000007007e00000000c00000800100020004000
 
-    private void findStr1Str2(String theMessage){
+    private void mdfLong(String theMessage) {
         String[] split = theMessage.split("\\|");
-        String mdf1=hexToBinary(split[1]);
-        String mdf2=hexToBinary(split[2]);
+        int mdf1=Integer.parseInt(hexToBinary(split[1]));//x
+        int mdf2=Integer.parseInt(hexToBinary(split[2]));//y
 
+        mazeView.setCurrentPosition(mdf2,mdf1);
+
+        String mdf3=hexToBinary(split[3]);//mdf1
+        String mdf4=hexToBinary(split[4]);//mdf2
+        setMDFShort(mdf3,mdf4);
+    }
+    private void setMDFShort(String mdf1,String mdf2){
+        Log.d("#####################3",mdf1);
+        Log.d("#####################3",mdf2);
         int row=0;
         int column=0;
         int obsPointer=0;
         for(int i=2;i<mdf1.length()-2;i++){
             //try {
-                if(mdf1.charAt(i)=='1'){
-                    mazeView.setExplored(row,column);
-                    if(mdf2.charAt(obsPointer)=='1'){
-                        mazeView.setObstacle(row,column);
-                    }
-                    obsPointer++;
+            if(mdf1.charAt(i)=='1'){
+                mazeView.setExplored(row,column);
+                if(mdf2.charAt(obsPointer)=='1'){
+                    mazeView.setObstacle(row,column);
                 }
-                else{
-                    mazeView.setUnexplored(row,column);
-                }
-                if(column==14){
-                    column=0;
-                    row++;
-                }
-                else column++;
+                obsPointer++;
+            }
+            else{
+                mazeView.setUnexplored(row,column);
+            }
+            if(column==14){
+                column=0;
+                row++;
+            }
+            else column++;
         }
+    }
+    private void findStr1Str2(String theMessage){
+        String[] split = theMessage.split("\\|");
+        String mdf1=hexToBinary(split[1]);
+        String mdf2=hexToBinary(split[2]);
+        setMDFShort(mdf1,mdf2);
     }
 
     private String hexToBinary(String str){

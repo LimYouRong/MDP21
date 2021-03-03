@@ -439,9 +439,9 @@ public class MazeView extends View {
         Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
         return robotCenter;
     }
-    public void setCurrentPosition(int[] position){
-        robotCenter[0] = position[0];
-        robotCenter[1] = position[1];
+    public void setCurrentPosition(int x,int y){
+        robotCenter[0] = x;
+        robotCenter[1] = y;
         updateMap();
     }
     private void updateMap(){
