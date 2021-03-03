@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,6 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -29,6 +32,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,10 +59,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //components
     private TextView deviceName;
-    private Button upButton;
-    private Button downButton;
-    private Button leftButton;
-    private Button rightButton;
+    private ImageButton upButton;
+    private ImageButton downButton;
+    private ImageButton leftButton;
+    private ImageButton rightButton;
+    private ImageView image;
     private Button chatboxBtn;
     private Button load_mapBtn;
     private Button send_mapBtn;
@@ -92,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private String device;
     boolean autoUpdate;
+
+    RecyclerView recycler_received;
+
+    ArrayList<Bitmap> liste_received;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -353,6 +363,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         });
+
+//        recycler_received=(RecyclerView)findViewById(R.id.recycle_pictures_sent);
+//
+//        liste_received=new ArrayList<>();
+//
+//        String dir="/sdcard/DCIM/Camera/";
+//
+//        String[] liste_photos={"IMG_20160521_141348.jpg","IMG_20160521_141348.jpg","IMG_20160521_141627.jpg","IMG_20160521_142946.jpg",
+//                "IMG_20160521_185556.jpg","IMG_20160528_174737.jpg"};
+//
+//        if (isStoragePermissionGranted())
+//        {
+//            for(int i=0;i<5;i++){
+//                liste_received.add(ResizeBitmap.decodeSampledBitmapFromResource(getResources(),dir+liste_photos[i],200,200));
+//            }
+//
+//        }
+//
+//        Adapter adapter=new Adapter(this,liste_received);
+//        recycler_received.setAdapter(adapter);
+//        recycler_received.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+//
     }
 
     private void sendToBlueToothChat(String msg) {
@@ -388,14 +420,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Toast.makeText(MainActivity.this, "MDF SHORT", Toast.LENGTH_SHORT).show();
             }
             if(theMessage.regionMatches(0,"MDFlong|",0,4)){
-//                findStr1Str2(theMessage);
                 mdfLong(theMessage);
                 Toast.makeText(MainActivity.this, "MDF LONG", Toast.LENGTH_SHORT).show();
                 Log.d("oooooooooooooooooooooo","mdf long");
             }
 
-            if(theMessage.regionMatches(0,"NUM|",0,4)){
+            else if(theMessage.regionMatches(0,"NUM|",0,4)){
                 addNumberGrid(theMessage);
+            }
+
+            else if(theMessage.regionMatches(0,"IMG|",0,4)){
+                addImage(theMessage);
             }
             //update map
             updateBluetoothChat(1,theMessage);
@@ -445,14 +480,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void mdfLong(String theMessage) {
         String[] split = theMessage.split("\\|");
-        int mdf1=Integer.parseInt(hexToBinary(split[1]));//x
-        int mdf2=Integer.parseInt(hexToBinary(split[2]));//y
+        int mdf1=Integer.parseInt(split[1]);//x
+        int mdf2=Integer.parseInt(split[2]);//y
+        int mdf3=Integer.parseInt(split[3]);//direction
 
         mazeView.setCurrentPosition(mdf2,mdf1);
+        mazeView.setCurrentAngle(mdf3*90);
 
-        String mdf3=hexToBinary(split[3]);//mdf1
-        String mdf4=hexToBinary(split[4]);//mdf2
-        setMDFShort(mdf3,mdf4);
+        String mdf4=hexToBinary(split[4]);//mdf1
+        String mdf5=hexToBinary(split[5]);//mdf2
+        setMDFShort(mdf4,mdf5);
     }
     private void setMDFShort(String mdf1,String mdf2){
         Log.d("#####################3",mdf1);
@@ -509,6 +546,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    private void addImage(String str){
+
+//        final String pureBase64Encoded = strn.substring(strn.indexOf(",")  + 1);
+//        final byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+//        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+//        image=findViewById(R.id.image);
+//        image.setImageBitmap(decodedBitmap);
+    }
     private void setStatusMessage(String message){
         robot_staText = findViewById(R.id.robot_sta);
         robot_staText.setText(message);

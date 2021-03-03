@@ -31,207 +31,209 @@
         tools:openDrawer="start"
         tools:context=".MainActivity">
 
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/fab"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|end"-->
-<!--            android:layout_margin="@dimen/fab_margin"-->
-<!--            app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#F5F6FB"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:paddingTop="16dp">
-
-            <!--Mapview-->
-
-            <com.example.mdpandroid.MazeView
-                    android:id="@+id/mazeView"
-                    android:layout_width="330dp"
-                    android:layout_height="430dp"
-                    android:layout_marginTop="50dp" />
-
+            android:layout_height="match_parent"
+            android:background="#F5F6FB">
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F5F6FB"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:paddingTop="16dp">
 
-            <Button
-                    android:id="@+id/set_number_grid"
-                    android:layout_width="139dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_toEndOf="@+id/set_obs_button"
-                    android:background="@drawable/button_2"
-                    android:elevation="13dp"
-                    android:text="@string/set_number_grid"
-                    android:textAppearance="@style/roboto"
-                    android:textColor="#4e7d96" />
+                    <!--Mapview-->
 
-                <Button
-                    android:id="@+id/set_obs_button"
-                    android:layout_width="139dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="48dp"
-                    android:layout_marginTop="50dp"
-                    android:background="@drawable/button_2"
-                    android:elevation="13dp"
-                    android:text="@string/set_obs"
-                    android:textAppearance="@style/roboto"
-                    android:textColor="#4e7d96"
-                    />
+                    <com.example.mdpandroid.MazeView
+                            android:id="@+id/mazeView"
+                            android:layout_width="350dp"
+                            android:layout_height="450dp"
+                            android:layout_marginTop="40dp" />
 
-                <TextView
-                    android:id="@+id/deviceName"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    <Button
+                            android:id="@+id/set_number_grid"
+                            android:layout_width="139dp"
+                            android:layout_height="38dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="30dp"
+                            android:layout_toEndOf="@+id/set_obs_button"
+                            android:background="@drawable/button_2"
+                            android:elevation="13dp"
+                            android:text="@string/set_number_grid"
+                            android:textAppearance="@style/roboto"
+                            android:textColor="#4e7d96" />
+
+                        <Button
+                            android:id="@+id/set_obs_button"
+                            android:layout_width="139dp"
+                            android:layout_height="38dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginStart="48dp"
+                            android:layout_marginTop="30dp"
+                            android:background="@drawable/button_2"
+                            android:elevation="13dp"
+                            android:text="@string/set_obs"
+                            android:textAppearance="@style/roboto"
+                            android:textColor="#4e7d96"
+                            />
+
+                        <TextView
+                            android:id="@+id/deviceName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TextView" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/front_button"
+                            android:layout_width="65dp"
+                            android:layout_height="63dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginStart="157dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/button_3"
+                            android:src="@drawable/forward"
+                            android:elevation="9dp"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/back_button"
+                            android:layout_width="65dp"
+                            android:layout_height="63dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="158dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="84dp"
+                            android:background="@drawable/button_3"
+                            android:src="@drawable/back"
+                            android:elevation="9dp"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/left_button"
+                            android:layout_width="65dp"
+                            android:layout_height="63dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="82dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="84dp"
+                            android:background="@drawable/button_3"
+                            android:src="@drawable/left"
+                            android:elevation="9dp"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/right_button"
+                            android:layout_width="65dp"
+                            android:layout_height="63dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="234dp"
+                            android:layout_marginTop="84dp"
+                            android:background="@drawable/button_3"
+                            android:src="@drawable/right"
+                            android:elevation="9dp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/front_button"
-                    android:layout_width="65dp"
-                    android:layout_height="63dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="157dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/button_3"
-                    android:elevation="9dp"
-                    />
-
-                <Button
-                    android:id="@+id/back_button"
-                    android:layout_width="65dp"
-                    android:layout_height="63dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="158dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="84dp"
-                    android:background="@drawable/button_3"
-                    android:elevation="9dp"
-                    />
-
-                <Button
-                    android:id="@+id/left_button"
-                    android:layout_width="65dp"
-                    android:layout_height="63dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="82dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="84dp"
-                    android:background="@drawable/button_3"
-                    android:elevation="9dp"
-                    />
-
-                <Button
-                    android:id="@+id/right_button"
-                    android:layout_width="65dp"
-                    android:layout_height="63dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="234dp"
-                    android:layout_marginTop="84dp"
-                    android:background="@drawable/button_3"
-                    android:elevation="9dp" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:paddingTop="16dp">
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:paddingTop="16dp">
 
 
-            <View
-                android:id="@+id/robot_status_box"
-                android:layout_width="159dp"
-                android:layout_height="57dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="35.8dp"
-                android:layout_marginEnd="48dp"
-                android:background="@drawable/status_box" />
+                    <View
+                        android:id="@+id/robot_status_box"
+                        android:layout_width="159dp"
+                        android:layout_height="57dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="35.8dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/status_box" />
 
-            <TextView
-                android:id="@+id/robot_sta_title"
-                android:layout_width="118dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="27dp"
-                android:layout_marginEnd="83dp"
-                android:background="#F4F5FB"
-                android:gravity="top"
-                android:text="@string/robot_sta"
-                android:textAppearance="@style/roboto"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/robot_sta_title"
+                        android:layout_width="118dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="27dp"
+                        android:layout_marginEnd="65dp"
+                        android:background="#F4F5FB"
+                        android:gravity="top"
+                        android:text="@string/robot_sta"
+                        android:textAppearance="@style/roboto"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/robot_sta"
-                android:layout_width="118dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="64dp"
-                android:background="#F4F5FB"
-                android:gravity="center_horizontal"
-                android:text="WAITING"
-                android:textAlignment="center"
-                android:textAppearance="@style/roboto"
-                android:textColor="#FF844B"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/robot_sta"
+                        android:layout_width="118dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginEnd="56dp"
+                        android:background="#F4F5FB"
+                        android:gravity="center_horizontal"
+                        android:text="WAITING"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#FF844B"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/explore_button"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/button_state"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="92.43dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="13dp"
-                android:text="@string/explore"
-                android:textAppearance="@style/roboto"
-                android:textColor="#4E7D96"
-                android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/explore_button"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="@color/button_state"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="92.43dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="13dp"
+                        android:text="@string/explore"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#4E7D96"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/fastest_button"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/button_state"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="141.51dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="13dp"
-                android:text="@string/fastest"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/fastest_button"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="@color/button_state"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="141.51dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="13dp"
+                        android:text="@string/fastest"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="@color/txt"
+                        android:textStyle="bold" />
 
             <Button
                 android:id="@+id/image_recog_button"
@@ -242,227 +244,261 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="188.09dp"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="30dp"
                 android:elevation="50dp"
                 android:text="@string/image_recog"
                 android:textAppearance="@style/roboto"
                 android:textColor="@color/txt"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/refresh_button"
-                app:backgroundTint="@color/button_state"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="238.43dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="50dp"
-                android:text="@string/refr"
-                android:textAppearance="@style/roboto"
-                android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/refresh_button"
+                        app:backgroundTint="@color/button_state"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="238.43dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="50dp"
+                        android:text="@string/refr"
+                        android:textAppearance="@style/roboto"
+                        android:textStyle="bold" />
 
-            <View
-                android:id="@+id/waypt_box"
-                android:layout_width="159dp"
-                android:layout_height="57dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="320.14dp"
-                android:layout_marginEnd="48dp"
-                android:background="@drawable/status_box" />
+                    <View
+                        android:id="@+id/waypt_box"
+                        android:layout_width="159dp"
+                        android:layout_height="57dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="320.14dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/status_box" />
 
-            <TextView
-                android:id="@+id/waypt_title"
-                android:layout_width="128dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="311dp"
-                android:layout_marginEnd="71dp"
-                android:background="#F4F5FB"
-                android:gravity="top"
-                android:text="@string/waypt_t"
-                android:textAppearance="@style/roboto"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/waypt_title"
+                        android:layout_width="128dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="311dp"
+                        android:layout_marginEnd="53dp"
+                        android:background="#F4F5FB"
+                        android:gravity="top"
+                        android:text="@string/waypt_t"
+                        android:textAppearance="@style/roboto"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/waypt"
-                android:layout_width="118dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="335dp"
-                android:layout_marginEnd="64dp"
-                android:background="#F4F5FB"
-                android:gravity="center_horizontal"
-                android:text="X:-- Y:--"
-                android:textAlignment="center"
-                android:textAppearance="@style/roboto"
-                android:textColor="#FF844B"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/waypt"
+                        android:layout_width="118dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="335dp"
+                        android:layout_marginEnd="46dp"
+                        android:background="#F4F5FB"
+                        android:gravity="center_horizontal"
+                        android:text="X:-- Y:--"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#FF844B"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/set_wp_button"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/button_state"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="364.26dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="50dp"
-                android:text="@string/setwp"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/set_wp_button"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="@color/button_state"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="364.26dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="50dp"
+                        android:text="@string/setwp"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="@color/txt"
+                        android:textStyle="bold" />
 
-            <View
-                android:id="@+id/robcoord_box"
-                android:layout_width="159dp"
-                android:layout_height="57dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="432.2dp"
-                android:layout_marginEnd="48dp"
-                android:background="@drawable/status_box" />
+                    <View
+                        android:id="@+id/robcoord_box"
+                        android:layout_width="159dp"
+                        android:layout_height="57dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="432.2dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/status_box" />
 
-            <TextView
-                android:id="@+id/robcoord_title"
-                android:layout_width="116dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="422.14dp"
-                android:layout_marginEnd="83dp"
-                android:background="#F4F5FB"
-                android:gravity="top"
-                android:text="@string/robcoord_t"
-                android:textAppearance="@style/roboto"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/robcoord_title"
+                        android:layout_width="116dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="422.14dp"
+                        android:layout_marginEnd="65dp"
+                        android:background="#F4F5FB"
+                        android:gravity="top"
+                        android:text="@string/robcoord_t"
+                        android:textAppearance="@style/roboto"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/robcoord"
-                android:layout_width="118dp"
-                android:layout_height="17.6dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="445dp"
-                android:layout_marginEnd="64dp"
-                android:background="#F4F5FB"
-                android:gravity="center_horizontal"
-                android:text="X:-- Y:--"
-                android:textAlignment="center"
-                android:textAppearance="@style/roboto"
-                android:textColor="#FF844B"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/robcoord"
+                        android:layout_width="118dp"
+                        android:layout_height="17.6dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="445dp"
+                        android:layout_marginEnd="46dp"
+                        android:background="#F4F5FB"
+                        android:gravity="center_horizontal"
+                        android:text="X:-- Y:--"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#FF844B"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/set_rob_button"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/button_state"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="487.67dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="13dp"
-                android:text="@string/setrob"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/set_rob_button"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="@color/button_state"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="487.67dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="13dp"
+                        android:text="@string/setrob"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="@color/txt"
+                        android:textStyle="bold" />
 
-            <Switch
-                android:id="@+id/auto_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/set_rob_button"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="11dp"
-                android:layout_toStartOf="@+id/tilt_switch"
-                android:text="@string/auto"
-                android:textAppearance="@style/roboto"
-                android:textColor="#4E7D96"
-                android:textStyle="bold"
-                android:trackTint="#4E7D96" />
+                    <Switch
+                        android:id="@+id/auto_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/set_rob_button"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="3dp"
+                        android:layout_toStartOf="@+id/tilt_switch"
+                        android:text="@string/auto"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#4E7D96"
+                        android:textStyle="bold"
+                        android:trackTint="#4E7D96" />
 
-            <Switch
-                android:id="@+id/tilt_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/set_rob_button"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:text="@string/tilt"
-                android:textAppearance="@style/roboto"
-                android:textColor="#4E7D96"
-                android:textStyle="bold"
-                android:trackTint="#4E7D96" />
+                    <Switch
+                        android:id="@+id/tilt_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/set_rob_button"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="30dp"
+                        android:text="@string/tilt"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#4E7D96"
+                        android:textStyle="bold"
+                        android:trackTint="#4E7D96" />
 
-            <View
-                android:id="@+id/coord_box"
-                android:layout_width="159dp"
-                android:layout_height="57dp"
-                android:layout_below="@+id/auto_switch"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:background="@drawable/status_box" />
+                    <View
+                        android:id="@+id/coord_box"
+                        android:layout_width="159dp"
+                        android:layout_height="57dp"
+                        android:layout_below="@+id/auto_switch"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/status_box" />
 
-            <TextView
-                android:id="@+id/coord_title"
-                android:layout_width="116dp"
-                android:layout_height="17.6dp"
-                android:layout_below="@+id/auto_switch"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="9dp"
-                android:layout_marginEnd="83dp"
-                android:background="#F4F5FB"
-                android:gravity="top"
-                android:text="@string/touchcoord_t"
-                android:textAppearance="@style/roboto"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/coord_title"
+                        android:layout_width="116dp"
+                        android:layout_height="17.6dp"
+                        android:layout_below="@+id/auto_switch"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="9dp"
+                        android:layout_marginEnd="65dp"
+                        android:background="#F4F5FB"
+                        android:gravity="top"
+                        android:text="@string/touchcoord_t"
+                        android:textAppearance="@style/roboto"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/coord"
-                android:layout_width="118dp"
-                android:layout_height="17.6dp"
-                android:layout_below="@+id/auto_switch"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="31dp"
-                android:layout_marginEnd="64dp"
-                android:background="#F4F5FB"
-                android:gravity="center_horizontal"
-                android:text="X:-- Y:--"
-                android:textAlignment="center"
-                android:textAppearance="@style/roboto"
-                android:textColor="#FF844B"
-                android:textStyle="bold" />
-
-
-            <Button
-                android:id="@+id/reset_button"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="#ffffff"
-                android:layout_width="159dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="644.71dp"
-                android:layout_marginEnd="48dp"
-                android:elevation="13dp"
-                android:text="@string/reconf"
-                android:textAppearance="@style/roboto"
-                android:textColor="@color/txt"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/coord"
+                        android:layout_width="118dp"
+                        android:layout_height="17.6dp"
+                        android:layout_below="@+id/auto_switch"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="46dp"
+                        android:background="#F4F5FB"
+                        android:gravity="center_horizontal"
+                        android:text="X:-- Y:--"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="#FF844B"
+                        android:textStyle="bold" />
 
 
-        </RelativeLayout>
+                    <Button
+                        android:id="@+id/reset_button"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="#ffffff"
+                        android:layout_width="159dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="644.71dp"
+                        android:layout_marginEnd="30dp"
+                        android:elevation="13dp"
+                        android:text="@string/reconf"
+                        android:textAppearance="@style/roboto"
+                        android:textColor="@color/txt"
+                        android:textStyle="bold" />
 
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/image_title"
+                            android:layout_width="118dp"
+                            android:layout_height="17.6dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="780dp"
+                            android:layout_marginLeft="30dp"
+                            android:background="#F4F5FB"
+                            android:gravity="top"
+                            android:text="RAW Image"
+                            android:textAppearance="@style/roboto"
+                            android:textStyle="bold"/>
+
+                        <ImageView
+                            android:id="@+id/image"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="820dp"
+                            android:layout_marginLeft="30dp"/>
+
+                        <TextView
+                            android:id="@+id/imageStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="820dp"
+                            android:layout_marginLeft="30dp"
+                            android:text="TextView" />
+                    </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nv"
             android:layout_width="wrap_content"
@@ -473,11 +509,7 @@
 
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         tools:context=".MainActivity">

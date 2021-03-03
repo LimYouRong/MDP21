@@ -143,7 +143,7 @@ public class MazeView extends View {
                     if(Integer.parseInt(item)<10&&Integer.parseInt(item)>0)
                         canvas.drawText(item,(x)*cellWidth+9,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                     else if(Integer.parseInt(item)>9&&Integer.parseInt(item)<16)
-                        canvas.drawText(item,(x)*cellWidth+6,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
+                        canvas.drawText(item,(x)*cellWidth+4,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                 }
             }
         }
@@ -205,9 +205,6 @@ public class MazeView extends View {
         touchPos[1]=posY;
         activityMain.updateCoord();
         Log.d("MAP PRESSED WITH X AND Y",touchPos[0]+" AND "+touchPos[1]);
-        if(obstacle[posX][posY]==1){
-
-        }
 
         invalidate();
         return true;
@@ -492,6 +489,12 @@ public class MazeView extends View {
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","numbergrid outside of cells");
         }
+    }
+
+    public void setCurrentAngle(int ang){
+        currentAngle=ang;
+        fixcurrentAngle();
+        updateMap();
     }
     public void resetMap(){
         robotCenter[0]=1;
