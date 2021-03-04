@@ -482,12 +482,14 @@
                             android:textAppearance="@style/roboto"
                             android:textStyle="bold"/>
 
-                        <ImageView
-                            android:id="@+id/image"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="820dp"
-                            android:layout_marginLeft="30dp"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="fill_parent"
+                            android:layout_height="120dp"
+                            android:id="@+id/recycler_pictures_received"
+
+                            >
+
+                        </androidx.recyclerview.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/imageStatus"

@@ -115,6 +115,21 @@ public class MazeView extends View {
                 canvas.drawRect(i*cellWidth,(ROWS_SIZE-1-j)*cellHeight,(i+1)*cellWidth,(ROWS_SIZE-j)*cellHeight,lightBluePaint);
             }
         }
+        //EXPLORATION MODE CODE
+        for (int y = 0; y < ROWS_SIZE; y++) {
+            for (int x = 0; x < COLUMNS_SIZE; x++) {
+
+                //when explored then draw obstacle if any
+                if (explored != null && explored[y][x] == 1) {
+                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  notLightBluePaint);
+                    if (obstacle != null && obstacle[y][x] == 1) {
+                        canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
+                                (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
+                    }
+                }
+            }
+        }
         //touchPos
         canvas.drawRect(touchPos[0]*cellWidth,(ROWS_SIZE-1-touchPos[1])*cellHeight,
                 (touchPos[0]+1)*cellWidth,(ROWS_SIZE-touchPos[1])*cellHeight,bluePaint);
@@ -147,21 +162,7 @@ public class MazeView extends View {
                 }
             }
         }
-        //EXPLORATION MODE CODE
-        for (int y = 0; y < ROWS_SIZE; y++) {
-            for (int x = 0; x < COLUMNS_SIZE; x++) {
 
-                //when explored then draw obstacle if any
-                if (explored != null && explored[y][x] == 1) {
-                    canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
-                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  notLightBluePaint);
-                    if (obstacle != null && obstacle[y][x] == 1) {
-                        canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
-                                (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
-                    }
-                }
-            }
-        }
         //startZone
         for(int i=0;i<=2;i++)
             for(int j=0;j<=2;j++)

@@ -364,27 +364,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-//        recycler_received=(RecyclerView)findViewById(R.id.recycle_pictures_sent);
-//
-//        liste_received=new ArrayList<>();
-//
-//        String dir="/sdcard/DCIM/Camera/";
-//
-//        String[] liste_photos={"IMG_20160521_141348.jpg","IMG_20160521_141348.jpg","IMG_20160521_141627.jpg","IMG_20160521_142946.jpg",
-//                "IMG_20160521_185556.jpg","IMG_20160528_174737.jpg"};
-//
-//        if (isStoragePermissionGranted())
-//        {
-//            for(int i=0;i<5;i++){
-//                liste_received.add(ResizeBitmap.decodeSampledBitmapFromResource(getResources(),dir+liste_photos[i],200,200));
-//            }
-//
-//        }
-//
-//        Adapter adapter=new Adapter(this,liste_received);
-//        recycler_received.setAdapter(adapter);
-//        recycler_received.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-//
+        recycler_received=(RecyclerView)findViewById(R.id.recycler_pictures_received);
+
+        liste_received=new ArrayList<>();
+
+        ImageAdapter adapter=new ImageAdapter(this,liste_received);
+        recycler_received.setAdapter(adapter);
+        recycler_received.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
     }
 
     private void sendToBlueToothChat(String msg) {
@@ -417,12 +403,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             if(theMessage.regionMatches(0,"MDFshort|",0,4)){
                 findStr1Str2(theMessage);
-                Toast.makeText(MainActivity.this, "MDF SHORT", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "MDF SHORT", Toast.LENGTH_SHORT).show();
             }
             if(theMessage.regionMatches(0,"MDFlong|",0,4)){
                 mdfLong(theMessage);
-                Toast.makeText(MainActivity.this, "MDF LONG", Toast.LENGTH_SHORT).show();
-                Log.d("oooooooooooooooooooooo","mdf long");
+//                Toast.makeText(MainActivity.this, "MDF LONG", Toast.LENGTH_SHORT).show();
+//                Log.d("oooooooooooooooooooooo","mdf long");
             }
 
             else if(theMessage.regionMatches(0,"NUM|",0,4)){
@@ -487,13 +473,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mazeView.setCurrentPosition(mdf2,mdf1);
         mazeView.setCurrentAngle(mdf3*90);
 
+        Log.d("MDF12",split[1]+"   "+split[2]);
+        Log.d("MDFLONGSTR4&5",split[4]+"sth\n"+split[5]+"sth");
+        Log.d("mdf4 running hex to binary ","sth: "+split[4].length());
         String mdf4=hexToBinary(split[4]);//mdf1
+        Log.d("mdf4 ended hex to binary ","sth: "+mdf4.length());
+        Log.d("mdf5 running hex to binary ","sth: "+split[5].length());
         String mdf5=hexToBinary(split[5]);//mdf2
+        Log.d("mdf5 ended hex to binary ","sth: "+split[5].length());
         setMDFShort(mdf4,mdf5);
     }
     private void setMDFShort(String mdf1,String mdf2){
-        Log.d("#####################3",mdf1);
-        Log.d("#####################3",mdf2);
+        Log.d("#####################3",mdf1+" "+mdf1.length());
+        Log.d("#####################3",mdf2+" "+mdf2.length());
         int row=0;
         int column=0;
         int obsPointer=0;
@@ -504,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(mdf2.charAt(obsPointer)=='1'){
                     mazeView.setObstacle(row,column);
                 }
-                obsPointer++;
+                if(obsPointer<mdf2.length())obsPointer++;
             }
             else{
                 mazeView.setUnexplored(row,column);
@@ -525,7 +517,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private String hexToBinary(String str){
         String ret = "";
+        str=str.trim();
+        Log.d("Length of str after trim","ssth:"+str.length());
         for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i)==' ')continue;
             String tem = new BigInteger(String.valueOf(str.charAt(i)), 16).toString(2);
             for(int j = 0; j < 4-tem.length(); j++) ret += "0";
             ret += tem;
@@ -547,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void addImage(String str){
-
+//        String strn
 //        final String pureBase64Encoded = strn.substring(strn.indexOf(",")  + 1);
 //        final byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
 //        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
