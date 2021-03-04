@@ -41,7 +41,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.PicHolder> {
         Context context=parent.getContext();
         LayoutInflater inflater= LayoutInflater.from(context);
 
-        View galleryView=inflater.inflate(R.layout.imageItem, parent, false);
+        View galleryView=inflater.inflate(R.layout.imageitem, parent, false);
 
         PicHolder picHolder=new PicHolder(galleryView);
 

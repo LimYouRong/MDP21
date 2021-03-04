@@ -481,7 +481,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("mdf5 running hex to binary ","sth: "+split[5].length());
         String mdf5=hexToBinary(split[5]);//mdf2
         Log.d("mdf5 ended hex to binary ","sth: "+split[5].length());
-        setMDFShort(mdf4,mdf5);
+        try{
+            setMDFShort(mdf4,mdf5);
+        }catch (NumberFormatException e){
+            Log.d("OOOOOOOOOOOOOOOOOOOOO","Number format exception");
+        }
+
     }
     private void setMDFShort(String mdf1,String mdf2){
         Log.d("#####################3",mdf1+" "+mdf1.length());
@@ -512,7 +517,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         String[] split = theMessage.split("\\|");
         String mdf1=hexToBinary(split[1]);
         String mdf2=hexToBinary(split[2]);
-        setMDFShort(mdf1,mdf2);
+        try{
+            setMDFShort(mdf1,mdf2);
+        }catch (NumberFormatException e){
+            Log.d("OOOOOOOOOOOOOOOOOOOOO","Number format exception");
+        }
+
     }
 
     private String hexToBinary(String str){
