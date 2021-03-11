@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +39,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.UUID;
 
 
 public class BluetoothActivity extends AppCompatActivity {
@@ -55,9 +53,6 @@ public class BluetoothActivity extends AppCompatActivity {
     TextView tvNew;
     private BluetoothAdapter btAdapter = null;
     private ProgressDialog progress;
-    BluetoothSocket btSocket = null;
-    private boolean isBtConnected = false;
-    static final UUID myUUID = UUID.fromString("163660a6-ad17-44fc-99c5-5c75e78ad815");
     String address = "";
     String name = "";
     private String device;
@@ -147,8 +142,7 @@ public class BluetoothActivity extends AppCompatActivity {
     //method for enabling discovery of the bluetooth device to other devices
     private void enableDiscovery() {
 
-        if (btAdapter.getScanMode() !=
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+        if (btAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
@@ -242,12 +236,10 @@ public class BluetoothActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //"saves" bluetooth device for other navigating into other activities
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
                 // If it's already paired, skip it, because it's been listed already
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     newDevicesArrayAdapter.add(device.getName()+ "\n MAC Address: "+device.getAddress());
                 }
-
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 //Finish scan
                 if (newDevicesArrayAdapter.getCount() == 0) {
@@ -256,7 +248,6 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
     };
-
     /**
      * check if user has enabled permissions for access_fine_location and access_coarse_location
      * required only if user's device's SDK is after LOLLIPOP's version

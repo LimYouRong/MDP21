@@ -482,15 +482,6 @@
                             android:textAppearance="@style/roboto"
                             android:textStyle="bold"/>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:layout_width="fill_parent"
-                            android:layout_height="120dp"
-                            android:id="@+id/recycler_pictures_received"
-
-                            >
-
-                        </androidx.recyclerview.widget.RecyclerView>
-
                         <TextView
                             android:id="@+id/imageStatus"
                             android:layout_width="wrap_content"

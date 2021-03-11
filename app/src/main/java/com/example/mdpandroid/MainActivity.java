@@ -4,17 +4,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.google.android.material.navigation.NavigationView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -24,22 +30,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.google.android.material.navigation.NavigationView;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -64,10 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ImageButton downButton;
     private ImageButton leftButton;
     private ImageButton rightButton;
-    private ImageView image;
     private Button chatboxBtn;
-    private Button load_mapBtn;
-    private Button send_mapBtn;
     private Button explore_button;
     private Button fastest_button;
     private Button image_recog_button;
@@ -76,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button set_rob_button;
     private Button reset_button;
     private Switch switchAuto;
-    private boolean SettingWaypoint = false;
-    private boolean SettingRobot;
     private Button set_obs_button;
 
     private TextView robcoord;
@@ -95,14 +81,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Switch tiltSwitch;
     private boolean _tilt=false;
 
-
     private String device;
     boolean autoUpdate;
-
-    RecyclerView recycler_received;
-
-    ArrayList<Bitmap> liste_received;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         //nav bar
-        dl = (DrawerLayout)findViewById(R.id.activity_main);
+        dl = findViewById(R.id.activity_main);
         dl.addDrawerListener(t);
         t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
         t.syncState();
-        nv = (NavigationView)findViewById(R.id.nv);
+        nv = findViewById(R.id.nv);
         nv.setItemIconTintList(null);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -145,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         mazeView = findViewById(R.id.mazeView);
-        switchAuto = (Switch) findViewById(R.id.auto_switch) ;
+        switchAuto = findViewById(R.id.auto_switch);
 
         switchAuto.setChecked(true);
         autoUpdate = true;
@@ -222,14 +202,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         set_obs_button = findViewById(R.id.set_obs_button);
 
         //initialize components
-        deviceName = (TextView) findViewById(R.id.deviceName);
+        deviceName = findViewById(R.id.deviceName);
         deviceName.setText("No connection found");
         upButton = findViewById(R.id.front_button);
         downButton = findViewById(R.id.back_button);
         leftButton = findViewById(R.id.left_button);
         rightButton = findViewById(R.id.right_button);
 
-        robcoord = (TextView) findViewById(R.id.robcoord);
+        robcoord = findViewById(R.id.robcoord);
         robcoord.setText("X:-- Y:--");
         final TextView wayPtText = findViewById(R.id.waypt);
 
@@ -321,15 +301,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //https://developer.android.com/reference/android/hardware/SensorManager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 50000000);
-        tiltSwitch = (Switch) findViewById(R.id.tilt_switch);
+        tiltSwitch = findViewById(R.id.tilt_switch);
         tiltSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked){
-                    _tilt = true;
-                }else {
-                    _tilt =false;
-                }
+                _tilt = isChecked;
             }
         });
 
@@ -355,9 +331,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothMessageReceiver,
                 new IntentFilter("getBluetoothMessage"));
         //Bluetooth chat
-        chatboxBtn = (Button) findViewById(R.id.chatboxBtn);
-        chatboxEditText = (EditText) findViewById(R.id.chatboxEt);
-        chatView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+        chatboxBtn = findViewById(R.id.chatboxBtn);
+        chatboxEditText = findViewById(R.id.chatboxEt);
+        chatView = findViewById(R.id.reyclerview_message_list);
         messageList = new ArrayList<Message>();
         messageAdapter = new MessageAdapter(messageList);
         chatView.setAdapter(messageAdapter);
@@ -378,14 +354,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         });
-
-        recycler_received=(RecyclerView)findViewById(R.id.recycler_pictures_received);
-
-        liste_received=new ArrayList<>();
-
-        ImageAdapter adapter=new ImageAdapter(this,liste_received);
-        recycler_received.setAdapter(adapter);
-        recycler_received.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
     }
 
     private void sendToBlueToothChat(String msg) {
@@ -418,20 +386,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             if(theMessage.regionMatches(0,"MDFshort|",0,4)){
                 findStr1Str2(theMessage);
-//                Toast.makeText(MainActivity.this, "MDF SHORT", Toast.LENGTH_SHORT).show();
             }
             if(theMessage.regionMatches(0,"MDFlong|",0,4)){
                 mdfLong(theMessage);
-//                Toast.makeText(MainActivity.this, "MDF LONG", Toast.LENGTH_SHORT).show();
-//                Log.d("oooooooooooooooooooooo","mdf long");
             }
 
             else if(theMessage.regionMatches(0,"NUM|",0,4)){
                 addNumberGrid(theMessage);
-            }
-
-            else if(theMessage.regionMatches(0,"IMG|",0,4)){
-                addImage(theMessage);
             }
             //update map
             updateBluetoothChat(1,theMessage);
@@ -444,35 +405,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // Get extra data included in the Intent
             String theName = intent.getStringExtra("bluetoothTextReceive");
             if (theName == ""){
-
-                //no device connected, disable bluetooth-related actions
-//                nameTv.setText(noDeviceMsg);
-//                cbBtn.setEnabled(false);
-//                //joystickRight.setEnabled(false);
-//                upBtn.setEnabled(false);
-//                downBtn.setEnabled(false);
-//                leftBtn.setEnabled(false);
-//                rightBtn.setEnabled(false);
-//                readyBtn.setEnabled(false);
-//                readyBtn.setBackgroundResource(R.drawable.disabledbutton);
-//                //--dcBtn.setEnabled(false);
-//                messageList.clear();
-//                chatAdapter.notifyDataSetChanged();
-//                statusTv.setText("Offline");
                 device = "";
             } else {
                 //device connected, enable all bluetooth-related actions
                 deviceName.setText("Connected to: "+theName);
-//                cbBtn.setEnabled(true);
-//                //joystickRight.setEnabled(true);
-//                upBtn.setEnabled(true);
-//                downBtn.setEnabled(true);
-//                leftBtn.setEnabled(true);
-//                rightBtn.setEnabled(true);
-//                readyBtn.setEnabled(true);
-//                readyBtn.setBackgroundResource(R.drawable.commonbutton);
-//                //--dcBtn.setEnabled(true);
-//                statusTv.setText("Waiting for instructions");
                 device = theName;
             }
         }
@@ -566,19 +502,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    private void addImage(String str){
-//        String strn
-//        final String pureBase64Encoded = strn.substring(strn.indexOf(",")  + 1);
-//        final byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
-//        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-//        image=findViewById(R.id.image);
-//        image.setImageBitmap(decodedBitmap);
-    }
     private void setStatusMessage(String message){
         robot_staText = findViewById(R.id.robot_sta);
         robot_staText.setText(message);
-
-
     }
     @Override
     protected void onDestroy() {
@@ -600,12 +526,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -642,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
     public void updateCoord(){
-        coord = (TextView)findViewById(R.id.coord);
+        coord = findViewById(R.id.coord);
         coord.setText("X:"+(mazeView.getTouchPos()[0]+1)+" Y:"+(mazeView.getTouchPos()[1]+1));
     }
 }

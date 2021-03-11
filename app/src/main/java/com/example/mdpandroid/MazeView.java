@@ -4,18 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.List;
 
 public class MazeView extends View {
 
@@ -29,7 +24,7 @@ public class MazeView extends View {
     private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
     private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
     private Paint lightBluePaint = new Paint();
-    private Paint notLightBluePaint = new Paint();
+    private Paint aviaryBlue = new Paint();
     private Paint bluePaint = new Paint();
     private Paint darkBluePaint = new Paint();
     private Paint whitePaint = new Paint();
@@ -38,7 +33,7 @@ public class MazeView extends View {
     private Paint yellowPaint = new Paint();
     private int cellWidth;
     private int cellHeight;
-    private String[][] numberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
+    private String[][] obstacleNumberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
     MainActivity activityMain = (MainActivity) getContext();
 
 
@@ -57,16 +52,12 @@ public class MazeView extends View {
         Log.d("wp","wpX: "+waypoint[0]+" wpY: "+waypoint[1]);
         return waypoint;
     }
-    public void setWaypoint(int [] waypoint){
-        this.waypoint = waypoint;
-    }
-
     public MazeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         //setting color for all color
         lightBluePaint.setColor(Color.parseColor("#E4EDF2"));
-        notLightBluePaint.setColor(Color.parseColor("#C9E2F0"));
+        aviaryBlue.setColor(Color.parseColor("#C9E2F0"));
         bluePaint.setColor(Color.parseColor("#6699CC"));
         darkBluePaint.setColor(Color.parseColor("#4E7D96"));
         whitePaint.setColor(Color.WHITE);
@@ -76,6 +67,11 @@ public class MazeView extends View {
         backgroundPaint.setStrokeWidth(SPACE_WIDTH);
 
         initalizeMaze();
+    }
+
+    public void setWaypoint(int[] waypoint) {
+        this.waypoint = waypoint;
+        //updateMap(); Either call updateMap here or invalidate on mainActivity
     }
 
     private void initalizeMaze() {
@@ -108,7 +104,6 @@ public class MazeView extends View {
     @Override
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
-
         //Plot empty Map
         for (int i=0;i<COLUMNS_SIZE;i++){
             for(int j=0;j<ROWS_SIZE;j++){
@@ -118,11 +113,10 @@ public class MazeView extends View {
         //EXPLORATION MODE CODE
         for (int y = 0; y < ROWS_SIZE; y++) {
             for (int x = 0; x < COLUMNS_SIZE; x++) {
-
                 //when explored then draw obstacle if any
                 if (explored != null && explored[y][x] == 1) {
                     canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
-                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight,  notLightBluePaint);
+                            (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, aviaryBlue);
                     if (obstacle != null && obstacle[y][x] == 1) {
                         canvas.drawRect(x * cellWidth, (ROWS_SIZE - 1 - y) * cellHeight,
                                 (x + 1) * cellWidth, (ROWS_SIZE - y) * cellHeight, darkBluePaint);
@@ -153,8 +147,8 @@ public class MazeView extends View {
         whitePaint.setFlags(Paint.FAKE_BOLD_TEXT_FLAG);
         for (int y = 0; y < ROWS_SIZE; y++) {
             for (int x = 0; x < COLUMNS_SIZE; x++) {
-                if(numberGrid[y][x]!=null){
-                    String item = numberGrid[y][x];
+                if (obstacleNumberGrid[y][x] != null) {
+                    String item = obstacleNumberGrid[y][x];
                     if(Integer.parseInt(item)<10&&Integer.parseInt(item)>0)
                         canvas.drawText(item,(x)*cellWidth+9,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                     else if(Integer.parseInt(item)>9&&Integer.parseInt(item)<16)
@@ -220,17 +214,19 @@ public class MazeView extends View {
         fixcurrentAngle();
         updateMap();
     }
+
+    //ALL 6 sensor methods are not used as we are updating robot using PC's updated mdf string.
+    //This is an alternate method to update obstacle directly from sensor taken by Auduino.
     public void realTimeObstacleCheck(String message){
-//        message = "2 2 2 4 2 0";
+//        message = "2 2 2 4 2 2";
         String[] splitStr = message.split("\\s+");
-        Log.d("TTTTTTTTTTTTTTTTTTTTT0",splitStr[0]);
-        Log.d("TTTTTTTTTTTTTTTTTTTTT1",splitStr[1]);
-        Log.d("TTTTTTTTTTTTTTTTTTTTT2",splitStr[2]);
-        Log.d("TTTTTTTTTTTTTTTTTTTTT3",splitStr[3]);
-        Log.d("TTTTTTTTTTTTTTTTTTTTT4",splitStr[4]);
-        Log.d("TTTTTTTTTTTTTTTTTTTTT5",splitStr[5]);
-        //x = robotCenter[0] y = robotCenter[1]
-        Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT0",splitStr[0]);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT1",splitStr[1]);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT2",splitStr[2]);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT3",splitStr[3]);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT4",splitStr[4]);
+//        Log.d("TTTTTTTTTTTTTTTTTTTTT5",splitStr[5]);
+//        Log.d("TAGGGGGGGGGGGGGGGGGGGGG","(X,Y) : direction as x:"+ robotCenter[0]+" y : "+ robotCenter[1]+" angle: "+ currentAngle);
 
         int num0 = Integer.parseInt(splitStr[0]);
         int num1 = Integer.parseInt(splitStr[1]);
@@ -241,7 +237,7 @@ public class MazeView extends View {
 
         if (num0 != 2){
             Log.d("oooooooooooooooooo","First Sensor");
-                        FirstSensor(num0);
+            FirstSensor(num0);
         }
         if(num1 !=2){
             Log.d("oooooooooooooooooo","Second Sensor");
@@ -299,7 +295,6 @@ public class MazeView extends View {
         }
     }
     private void FourthSensor(int num3){
-//        if(splitStr[3]!="4"){
             if (currentAngle == 0){
                 setObstacle(robotCenter[0]+2+num3,robotCenter[1]+1);
             }else if(currentAngle == 90){
@@ -332,6 +327,8 @@ public class MazeView extends View {
             setObstacle(robotCenter[0]+1,robotCenter[1]-(2+num5));
         }
     }
+
+    //This method is used instead of modulo to prevent potential overflowing
     private void fixcurrentAngle(){
         if(currentAngle<0){
             currentAngle +=360;
@@ -357,6 +354,8 @@ public class MazeView extends View {
                 break;
         }
     }
+
+    //This method is used to ensure the robot is within the arena.
     private void checkBounds(){
         if(robotCenter[0] == 0)
             robotCenter[0] =1;
@@ -454,8 +453,6 @@ public class MazeView extends View {
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","OBS outside of cells");
         }
-
-
     }
 
     public void setExplored(int y, int x){
@@ -465,8 +462,6 @@ public class MazeView extends View {
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","explored outside of cells");
         }
-
-
     }
 
     public void setUnexplored(int y, int x){
@@ -476,14 +471,12 @@ public class MazeView extends View {
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","unexplored outside of cells");
         }
-
-
     }
 
     public void setNumberGrid(String item, int column, int row){
         if(column>=0 && column<COLUMNS_SIZE && row>=0 && row<ROWS_SIZE){
             if(obstacle[row-1][column-1]==1){
-                numberGrid[row-1][column-1]=item;
+                obstacleNumberGrid[row - 1][column - 1] = item;
             }else{
                 Log.d("Not obstacle so no number grid!","X: "+column+" Y: "+row);
             }
@@ -509,7 +502,7 @@ public class MazeView extends View {
             for(int y=0;y<COLUMNS_SIZE;y++){
                 explored[x][y]=0;
                 obstacle[x][y]=0;
-                numberGrid[x][y]=null;
+                obstacleNumberGrid[x][y] = null;
             }
         }
         invalidate();
