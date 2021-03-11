@@ -32,10 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
     private Button buttonSecond;
     private Button saveBtn;
     private Button editBtn;
-    private EditText etOne;
-    private EditText etTwo;
-    private TextView tvOne;
-    private TextView tvTwo;
+    private EditText editTextTop;
+    private EditText editTextBot;
+    private TextView textViewTop;
+    private TextView textViewBot;
     private String device;
 
     //navbar
@@ -62,16 +62,16 @@ public class SettingsActivity extends AppCompatActivity {
         buttonSecond = findViewById(R.id.button2);
         saveBtn = findViewById(R.id.buttonSave);
         editBtn = findViewById(R.id.buttonEdit);
-        etOne = findViewById(R.id.editText1);
-        etTwo = findViewById(R.id.editText2);
-        tvOne = findViewById(R.id.textView5);
-        tvTwo = findViewById(R.id.textView6);
+        editTextTop = findViewById(R.id.editText1);
+        editTextBot = findViewById(R.id.editText2);
+        textViewTop = findViewById(R.id.textView5);
+        textViewBot = findViewById(R.id.textView6);
 
         saveBtn.setVisibility(View.INVISIBLE);
-        etOne.setVisibility(View.INVISIBLE);
-        etTwo.setVisibility(View.INVISIBLE);
-        tvOne.setVisibility(View.INVISIBLE);
-        tvTwo.setVisibility(View.INVISIBLE);
+        editTextTop.setVisibility(View.INVISIBLE);
+        editTextBot.setVisibility(View.INVISIBLE);
+        textViewTop.setVisibility(View.INVISIBLE);
+        textViewBot.setVisibility(View.INVISIBLE);
 
         //nav bar
         dl = findViewById(R.id.activity_settings);
@@ -115,23 +115,23 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveBtn.setVisibility(View.VISIBLE);
-                etOne.setVisibility(View.VISIBLE);
-                etTwo.setVisibility(View.VISIBLE);
-                tvOne.setVisibility(View.VISIBLE);
-                tvTwo.setVisibility(View.VISIBLE);
+                editTextTop.setVisibility(View.VISIBLE);
+                editTextBot.setVisibility(View.VISIBLE);
+                textViewTop.setVisibility(View.VISIBLE);
+                textViewBot.setVisibility(View.VISIBLE);
                 editBtn.setEnabled(false);
                 editBtn.setVisibility(View.INVISIBLE);
 
                 SharedPreferences sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE);
                 if (sharedPref.contains("value1")){
-                    etOne.setText(sharedPref.getString("value1", ""));
+                    editTextTop.setText(sharedPref.getString("value1", ""));
                 } else {
-                    etOne.setText("Default Message 1");
+                    editTextTop.setText("Default Message 1");
                 }
                 if (sharedPref.contains("value2")){
-                    etTwo.setText(sharedPref.getString("value2", ""));
+                    editTextBot.setText(sharedPref.getString("value2", ""));
                 } else {
-                    etTwo.setText("Default Message 2");
+                    editTextBot.setText("Default Message 2");
                 }
             }
         });
@@ -144,23 +144,23 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //check if any of the edit texts are empty
-                if (etOne.getText().toString().trim().equalsIgnoreCase("") ||
-                        etTwo.getText().toString().trim().equalsIgnoreCase("")){
+                if (editTextTop.getText().toString().trim().equalsIgnoreCase("") ||
+                        editTextBot.getText().toString().trim().equalsIgnoreCase("")) {
                     Toast.makeText(SettingsActivity.this, "Custom messages cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     saveBtn.setVisibility(View.INVISIBLE);
-                    etOne.setVisibility(View.INVISIBLE);
-                    etTwo.setVisibility(View.INVISIBLE);
-                    tvOne.setVisibility(View.INVISIBLE);
-                    tvTwo.setVisibility(View.INVISIBLE);
+                    editTextTop.setVisibility(View.INVISIBLE);
+                    editTextBot.setVisibility(View.INVISIBLE);
+                    textViewTop.setVisibility(View.INVISIBLE);
+                    textViewBot.setVisibility(View.INVISIBLE);
                     editBtn.setEnabled(true);
                     editBtn.setVisibility(View.VISIBLE);
 
                     SharedPreferences sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("value1", etOne.getText().toString());
-                    editor.putString("value2", etTwo.getText().toString());
+                    editor.putString("value1", editTextTop.getText().toString());
+                    editor.putString("value2", editTextBot.getText().toString());
                     editor.commit();
                     Toast.makeText(SettingsActivity.this, "Custom messages saved", Toast.LENGTH_SHORT).show();
                 }
@@ -177,13 +177,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //set default message
-                String value = "Default Message 1";
+                String value;
                 //retrieve app's SharedPreferences
                 SharedPreferences sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE);
                 //if app's SharedPreferences has "value1" as key
                 if (sharedPref.contains("value1")){
                     //change default message to value retrieved from SharedPreferences
                     value = sharedPref.getString("value1", "");
+                } else {
+                    value = "Default Message 1";
                 }
                 //send ToastMessage to notify user that message is sent
                 Toast.makeText(SettingsActivity.this, value, Toast.LENGTH_SHORT).show();
@@ -196,13 +198,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //set default message
-                String value = "Default Message 2";
+                String value;
                 //retrieve app's SharedPreferences
                 SharedPreferences sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE);
                 //if app's SharedPreferences has "value2" as key
                 if (sharedPref.contains("value2")){
                     //change default message to value retrieved from SharedPreferences
                     value = sharedPref.getString("value2", "");
+                } else {
+                    value = "Default Message 2";
                 }
                 //send ToastMessage to notify user that message is sent
                 Toast.makeText(SettingsActivity.this, value, Toast.LENGTH_SHORT).show();
