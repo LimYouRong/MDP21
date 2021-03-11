@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -169,7 +170,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.d("TAGGGGGGGGGGGG","Explore button clicked");
                 Toast.makeText(MainActivity.this, "EXPLORE BUTTON PRESSED", Toast.LENGTH_SHORT).show();
                 sendToBlueToothChat("PC,AN,startexp");
-                sendToBlueToothChat("AR,AN,startexp");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendToBlueToothChat("AR,AN,s");
+                        Log.d("INTENTIONAL DELAY","SENT");
+                    }
+                }, 1000);
+
                 setStatusMessage("Exploration in progress");
 
             }
@@ -191,7 +199,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 Log.d("TAGGGGGGGGG", "IMAGE RECOG BUTTON PRESSED");
                 sendToBlueToothChat("PC,AN,startIMGexp");
-                sendToBlueToothChat("AR,AN,startIMGexp");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendToBlueToothChat("AR,AN,s");
+                        Log.d("INTENTIONAL DELAY","SENT");
+                    }
+                }, 1000);
+
 
                 setStatusMessage("Image recog in progress");
 
