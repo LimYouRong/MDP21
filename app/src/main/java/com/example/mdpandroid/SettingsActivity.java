@@ -23,6 +23,8 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * class for Settings UI
  * used for saving custom messages on app
+ *
+ * Shared preference code reference https://www.tutorialspoint.com/android/android_shared_preferences.htm
  */
 public class SettingsActivity extends AppCompatActivity {
 
@@ -72,14 +74,12 @@ public class SettingsActivity extends AppCompatActivity {
         tvTwo.setVisibility(View.INVISIBLE);
 
         //nav bar
-        dl = (DrawerLayout)findViewById(R.id.activity_settings);
-        //--
+        dl = findViewById(R.id.activity_settings);
         dl.addDrawerListener(t);
         t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
         t.syncState();
-        //--
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        nv = (NavigationView)findViewById(R.id.nv);
+        nv = findViewById(R.id.nv);
         nv.setItemIconTintList(null);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -108,7 +108,8 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         /**
-         * enable custom messages to be edited
+         * Shows the editText and save button to update the default message
+         * Used value1 and value2 as key
          */
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         /**
-         * save custom messages onto app's SharedPreferences
+         * Save as SharedPreference. Key are value1 and value2 accordingly
          */
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +148,6 @@ public class SettingsActivity extends AppCompatActivity {
                         etTwo.getText().toString().trim().equalsIgnoreCase("")){
                     Toast.makeText(SettingsActivity.this, "Custom messages cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-                //use .comit() to save onto app's SharedPreferences
                 else {
                     saveBtn.setVisibility(View.INVISIBLE);
                     etOne.setVisibility(View.INVISIBLE);
