@@ -63,8 +63,6 @@ public class BluetoothActivity extends AppCompatActivity {
     private String device;
 
     public static BluetoothService btService = null;
-//    public static StringBuffer mOutStringBuffer;
-
     private ArrayAdapter<String> newDevicesArrayAdapter;
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
 
@@ -73,167 +71,65 @@ public class BluetoothActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_main);
-
-        //get intent
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            if (bundle.containsKey("device")){
-                device = bundle.getString("device");
-            } else {
-                device = "";
-            }
-        } else {
-            device = "";
-        }
-
-        //nav bar
-        dl = (DrawerLayout)findViewById(R.id.bluetooth_main);
-        dl.addDrawerListener(t);
-        t = new ActionBarDrawerToggle(this, dl,R.string.app_name, R.string.app_name);
-        t.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        nv = (NavigationView)findViewById(R.id.nv);
-        nv.setItemIconTintList(null);
-        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch(id)
-                {
-                    case R.id.home:
-                        Intent i = new Intent(BluetoothActivity.this, MainActivity.class);
-                        i.putExtra("name", name);
-                        i.putExtra("device", device);
-                        startActivity(i);
-                        return true;
-                    case R.id.bluetooth:
-                        dl.closeDrawers();
-                        return true;
-                    case R.id.settings:
-                        Intent x = new Intent(BluetoothActivity.this, SettingsActivity.class);
-                        x.putExtra("device", device);
-                        startActivity(x);
-                        return true;
-                    default:
-                        return true;
-                }
-
-            }
-        });
-
-        /**
-         * Create SpannableString to modify text's properties for the header "Paired Devices"
-         */
-        tvPaired = (TextView) findViewById(R.id.textViewPaired);
-        String forTvPaired = "Paired Devices";
-        SpannableString ss1 = new SpannableString(forTvPaired);
-        //set size of text
-        ss1.setSpan(new RelativeSizeSpan(1.5f), 0, 14, 0);
-        //set colour of text
-        ss1.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 14, 0);
-        //set underline for text
-        ss1.setSpan(new UnderlineSpan(), 0, 14, 0);
-        //bind text to tvPaired
-        tvPaired.setText(ss1);
-
-        /**
-         * Create SpannableString to modify text's properties for the header "Available Devices"
-         */
-        tvNew = (TextView) findViewById(R.id.textViewNew);
-        String forTvNew = "Available Devices";
-        SpannableString ss2 = new SpannableString(forTvNew);
-        //set size of text
-        ss2.setSpan(new RelativeSizeSpan(1.5f), 0, 17, 0);
-        //set colour of text
-        ss2.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 17, 0);
-        //set underline for text
-        ss2.setSpan(new UnderlineSpan(), 0, 17, 0);
-        //bind text to tvNew
-        tvNew.setText(ss2);
-
-        btnScanPaired = (Button)findViewById(R.id.scanPairedButton);
-        devicelist = (ListView)findViewById(R.id.devicesListView);
-        pairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
-        devicelist.setAdapter(pairedDevicesArrayAdapter);
-        devicelist.setOnItemClickListener(adapterViewListener);
-
-        btnScanNew = (Button) findViewById(R.id.scanNewButton);
-        newDeviceList = (ListView) findViewById(R.id.newDevicesListView);
-        newDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
-        ArrayList list2 = new ArrayList();
-        newDevicesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list2);
-        newDeviceList.setAdapter(newDevicesArrayAdapter);
-        newDeviceList.setOnItemClickListener(adapterViewListener);
-
-        btnEnableDiscoverable = (Button) findViewById(R.id.enableDiscoverableBtn);
-
-
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(btAdapter == null)
-        {
-            //no bluetooth adapter
-            Toast.makeText(getApplicationContext(), "Bluetooth Device Not Available", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        else
-        {
-            if (!btAdapter.isEnabled()) {
-                //bluetooth not enabled
-                Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(turnBTon,1);
-            } else {
-                //use android's .getBondedDevices() to retrieve a list of paired devices attached to the phone
-                Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-                ArrayList list = new ArrayList();
-
-                if (pairedDevices.size()>0) {
-                    //found at least one paired devices
-                    for(BluetoothDevice bt : pairedDevices)
-                    {
-                        //add all paired devices to list
-                        list.add(bt.getName() + "\n MAC Address: " + bt.getAddress()); //Get the device's name and the address
+    /**
+     * The Handler that gets information back from the BluetoothService
+     */
+    public final Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_CONNECTED:
+                            //when notified that bluetooth service has connected to a device
+                            sendToMain(name); //send name of device to MainActivity
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+                            //when notified that bluetooth service is connecting to a device
+                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
+                            name = ""; //set name to empty string since no devices is currently connected
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+                            //when notified that bluetooth service is listening for devices
+                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
+                            name = ""; //set name to empty string since no devices is currently connected
+                        case BluetoothService.STATE_NONE:
+                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
+                            name = ""; //set name to empty string since no devices is currently connected
+                            break;
                     }
-                }
-                else {
-                    //no paired devices found on device
-                    list.add("No Paired Bluetooth Devices Found");
-                }
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    sendTextToMain(readMessage); //send message to MainActivity that was received in buffer
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    name = msg.getData().getString(Constants.DEVICE_NAME);
+                    if (null != getApplicationContext()) {
+                        if (name != null) {
+                            Log.d("", "");
+                            Toast.makeText(getApplicationContext(), "Connected to " + name, Toast.LENGTH_SHORT).show();
+                            //send to name of device currently connected
+                            sendToMain(name);
+                        }
+                    }
 
-                //bind list to adapter
-                final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-                //set adapter so it can be updated dynamically in the future
-                devicelist.setAdapter(adapter);
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    if (null != getApplicationContext()) {
+                        String theMsg = msg.getData().getString(Constants.TOAST);
+                        if (theMsg.equalsIgnoreCase("device connection was lost")) {
+                            Toast.makeText(getApplicationContext(), theMsg, Toast.LENGTH_SHORT).show();
+                            name = ""; //set name to empty string since connection was lost
+                            sendToMain(""); //send empty string to mainactivity to notify no device currently connected
+                        }
+                    }
+                    break;
             }
         }
-
-        btnScanPaired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                pairedDevicesList(); //method that will be called
-            }
-        });
-
-        btnScanNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                newDevicesList(); // method that will be called
-            }
-        });
-
-        btnEnableDiscoverable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                enableDiscovery(); //method that will be called
-            }
-        });
-    }
+    };
 
     @Override
     protected void onDestroy() {
@@ -247,8 +143,6 @@ public class BluetoothActivity extends AppCompatActivity {
         // Unregister broadcast listeners
         this.unregisterReceiver(bReceiver);
     }
-
-
 
     //method for enabling discovery of the bluetooth device to other devices
     private void enableDiscovery() {
@@ -377,86 +271,54 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // If BT is not on, request that it be enabled.
-        if (!btAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, 200);
-            // Otherwise, setup the chat session
-        } else if (btService == null) {
-            btService = new BluetoothService(getApplicationContext(), mHandler);
-//            setupChat();
-        }
-    }
-
-    // Initialize the BluetoothService to perform bluetooth connections
-//    private void setupChat(){
-//
-////        mOutStringBuffer = new StringBuffer("");
-//    }
-
-    /**
-     * The Handler that gets information back from the BluetoothService
-     */
-    public final Handler mHandler = new Handler(Looper.myLooper()) {
+    //get sent text from MainActivity
+    private BroadcastReceiver mTextReceiver = new BroadcastReceiver() {
         @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothService.STATE_CONNECTED:
-                            //when notified that bluetooth service has connected to a device
-                            sendToMain(name); //send name of device to MainActivity
-                            break;
-                        case BluetoothService.STATE_CONNECTING:
-                            //when notified that bluetooth service is connecting to a device
-                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
-                            name = ""; //set name to empty string since no devices is currently connected
-                            break;
-                        case BluetoothService.STATE_LISTEN:
-                            //when notified that bluetooth service is listening for devices
-                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
-                            name = ""; //set name to empty string since no devices is currently connected
-                        case BluetoothService.STATE_NONE:
-                            sendToMain(""); //send empty string to MainActivity to notify that no devices connected currently
-                            name = ""; //set name to empty string since no devices is currently connected
-                            break;
-                    }
-                    break;
-                case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    sendTextToMain(readMessage); //send message to MainActivity that was received in buffer
-                case Constants.MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    name = msg.getData().getString(Constants.DEVICE_NAME);
-                    if (null != getApplicationContext()) {
-                        if (name == null){
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Connected to "+ name, Toast.LENGTH_SHORT).show();
-                            //send to mainactivity
-                            sendToMain(name); //name of device currently connected
-                        }
-                    }
-
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (null != getApplicationContext()) {
-                        String theMsg = msg.getData().getString(Constants.TOAST) ;
-                        if (theMsg.equalsIgnoreCase("device connection was lost")){
-                            Toast.makeText(getApplicationContext(), theMsg, Toast.LENGTH_SHORT).show();
-                            name = ""; //set name to empty string since connection was lost
-                            sendToMain(""); //send empty string to mainactivity to notify no device currently connected
-                        }
-                    }
-                    break;
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String theText = intent.getStringExtra("bluetoothTextSend");
+            if (theText != null){
+                if (btService.getState() != BluetoothService.STATE_CONNECTED) {
+                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //send out message
+                byte[] send = theText.getBytes();
+                btService.write(send);
+            }
+        }
+    };
+    //get robot movements from MainActivity
+    private BroadcastReceiver mCtrlReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String control = intent.getStringExtra("control");
+            if (control != null){
+                if (btService.getState() != BluetoothService.STATE_CONNECTED) {
+                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //send out message
+                byte[] send = control.getBytes();
+                btService.write(send);
+            }
+        }
+    };
+    //listen for disconnection from MainActivity
+    private BroadcastReceiver mDcReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String control = intent.getStringExtra("disconnect");
+            if (control != null){
+                if (btService.getState() != BluetoothService.STATE_CONNECTED) {
+                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                destroyReceivers();
+                btService.stop();
+                btService.start();
             }
         }
     };
@@ -479,75 +341,180 @@ public class BluetoothActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bluetooth_main);
+
+        //get intent
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            if (bundle.containsKey("device")) {
+                device = bundle.getString("device");
+            } else {
+                device = "";
+            }
+        } else {
+            device = "";
+        }
+
+        //nav bar
+        dl = findViewById(R.id.bluetooth_main);
+        dl.addDrawerListener(t);
+        t = new ActionBarDrawerToggle(this, dl, R.string.app_name, R.string.app_name);
+        t.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        nv = findViewById(R.id.nv);
+        nv.setItemIconTintList(null);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.home:
+                        Intent i = new Intent(BluetoothActivity.this, MainActivity.class);
+                        i.putExtra("name", name);
+                        i.putExtra("device", device);
+                        startActivity(i);
+                        return true;
+                    case R.id.bluetooth:
+                        dl.closeDrawers();
+                        return true;
+                    case R.id.settings:
+                        Intent x = new Intent(BluetoothActivity.this, SettingsActivity.class);
+                        x.putExtra("device", device);
+                        startActivity(x);
+                        return true;
+                    default:
+                        return true;
+                }
+
+            }
+        });
+
+        /*
+         * Create SpannableString to modify text's properties for the header "Paired Devices"
+         */
+        tvPaired = findViewById(R.id.textViewPaired);
+        String forTvPaired = "Paired Devices";
+        SpannableString ss1 = new SpannableString(forTvPaired);
+        //set size of text
+        ss1.setSpan(new RelativeSizeSpan(1.5f), 0, 14, 0);
+        //set colour of text
+        ss1.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 14, 0);
+        //set underline for text
+        ss1.setSpan(new UnderlineSpan(), 0, 14, 0);
+        //bind text to tvPaired
+        tvPaired.setText(ss1);
+
+        /*
+         * Create SpannableString to modify text's properties for the header "Available Devices"
+         */
+        tvNew = findViewById(R.id.textViewNew);
+        String forTvNew = "Available Devices";
+        SpannableString ss2 = new SpannableString(forTvNew);
+        //set size of text
+        ss2.setSpan(new RelativeSizeSpan(1.5f), 0, 17, 0);
+        //set colour of text
+        ss2.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 17, 0);
+        //set underline for text
+        ss2.setSpan(new UnderlineSpan(), 0, 17, 0);
+        //bind text to tvNew
+        tvNew.setText(ss2);
+
+        btnScanPaired = findViewById(R.id.scanPairedButton);
+        devicelist = findViewById(R.id.devicesListView);
+        pairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+        devicelist.setAdapter(pairedDevicesArrayAdapter);
+        devicelist.setOnItemClickListener(adapterViewListener);
+
+        btnScanNew = findViewById(R.id.scanNewButton);
+        newDeviceList = findViewById(R.id.newDevicesListView);
+        newDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+        ArrayList list2 = new ArrayList();
+        newDevicesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list2);
+        newDeviceList.setAdapter(newDevicesArrayAdapter);
+        newDeviceList.setOnItemClickListener(adapterViewListener);
+
+        btnEnableDiscoverable = findViewById(R.id.enableDiscoverableBtn);
+
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (btAdapter == null) {
+            //no bluetooth adapter
+            Toast.makeText(getApplicationContext(), "Bluetooth Device Not Available", Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            if (!btAdapter.isEnabled()) {
+                //bluetooth not enabled
+                Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(turnBTon, 1);
+            } else {
+                //use android's .getBondedDevices() to retrieve a list of paired devices attached to the phone
+                Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+                ArrayList list = new ArrayList();
+
+                if (pairedDevices.size() > 0) {
+                    //found at least one paired devices
+                    for (BluetoothDevice bt : pairedDevices) {
+                        //add all paired devices to list
+                        list.add(bt.getName() + "\n MAC Address: " + bt.getAddress()); //Get the device's name and the address
+                    }
+                } else {
+                    //no paired devices found on device
+                    list.add("No Paired Bluetooth Devices Found");
+                }
+
+                //bind list to adapter
+                final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+                //set adapter so it can be updated dynamically in the future
+                devicelist.setAdapter(adapter);
+            }
+        }
+
+        btnScanPaired.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pairedDevicesList(); //method that will be called
+            }
+        });
+
+        btnScanNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newDevicesList(); // method that will be called
+            }
+        });
+
+        btnEnableDiscoverable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enableDiscovery(); //method that will be called
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // If BT is not on, request that it be enabled.
+        if (!btAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, 200);
+            //setup the chat session
+        } else if (btService == null) {
+            btService = new BluetoothService(getApplicationContext(), mHandler);
+        }
+    }
+
     //method to send text received from bluetooth connection
     private void sendTextToMain(String msg) {
         Intent intent = new Intent("getBluetoothMessage");
-        // You can also include some extra data.
-        Log.d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Message received",msg);
+        // Received Bluetooth message
+        Log.d("Message received", msg);
         intent.putExtra("bluetoothMessage", msg);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
-
-    //get sent text from MainActivity
-    private BroadcastReceiver mTextReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String theText = intent.getStringExtra("bluetoothTextSend");
-            if (theText != null){
-                if (btService.getState() != btService.STATE_CONNECTED) {
-                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.d("&&&&&&&&&&&&&&&&&&&&&&&&&","printing");
-                //send out message
-                byte[] send = theText.getBytes();
-                btService.write(send);
-
-                // Reset out string buffer to zero
-//                mOutStringBuffer.setLength(0);
-                Log.d("&&&&&&&&&&&&&&&&&&&&&&&&&","resetted");
-            }
-        }
-    };
-
-    //get robot movements from MainActivity
-    private BroadcastReceiver mCtrlReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String control = intent.getStringExtra("control");
-            if (control != null){
-                if (btService.getState() != btService.STATE_CONNECTED) {
-                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //send out message
-                byte[] send = control.getBytes();
-                btService.write(send);
-//                mOutStringBuffer.setLength(0);
-
-            }
-        }
-    };
-
-    //listen for disconnection from MainActivity
-    private BroadcastReceiver mDcReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String control = intent.getStringExtra("disconnect");
-            if (control != null){
-                if (btService.getState() != btService.STATE_CONNECTED) {
-                    Toast.makeText(getApplicationContext(), "Connection Lost. Please try again.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                destroyReceivers();
-                btService.stop();
-                btService.start();
-            }
-        }
-    };
 
     //register receivers needed
     private void registerReceivers(){

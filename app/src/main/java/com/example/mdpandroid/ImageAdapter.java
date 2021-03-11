@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +18,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.PicHolder> {
 
         public PicHolder(View itemview){
             super(itemview);
-            mimage_sent=(ImageView)itemview.findViewById(R.id.image_gallery);
+            mimage_sent = itemview.findViewById(R.id.image_gallery);
         }
     }
 
