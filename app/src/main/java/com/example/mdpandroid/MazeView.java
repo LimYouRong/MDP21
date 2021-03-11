@@ -195,7 +195,8 @@ public class MazeView extends View {
         if (event.getAction() != MotionEvent.ACTION_DOWN)
             return true;
         int posX = (int)event.getX()/cellWidth;
-        int posY = ROWS_SIZE-1-(int)event.getY()/cellWidth;
+        int posY = ROWS_SIZE - 1 - (int) event.getY() / cellHeight;
+
         touchPos[0]=posX;
         touchPos[1]=posY;
         activityMain.updateCoord();
