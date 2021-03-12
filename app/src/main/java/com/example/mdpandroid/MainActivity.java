@@ -32,7 +32,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private String device;
     boolean autoUpdate;
+    private ArrayList<ArrayList<String>> imageResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,6 +285,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
                 mazeView.invalidate();
+                for (ArrayList li : imageResult) {
+                    Log.d("*********************", li.toString() + "");
+                    mazeView.setObstacle(Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(0).toString()));
+                    mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
+                }
+
+
             }
         });
 
@@ -354,6 +367,45 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         });
+        imageResult = new ArrayList<ArrayList<String>>();
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    try {
+                        // Create a URL for the desired page
+                        URL url = new URL("https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/result.txt");
+
+                        // Read all the text returned by the server
+                        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                        String str;
+                        while ((str = in.readLine()) != null) {
+                            ArrayList<String> list = new ArrayList<String>();
+                            // str is one line of text; readLine() strips the newline character(s)
+                            Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", str);
+
+                            for (String i : str.split(",")) {
+                                list.add(i);
+                            }
+                            imageResult.add(list);
+//                            list.add();
+//                            (Arrays.asList(str.split(",")));
+                        }
+                        in.close();
+                    } catch (MalformedURLException e) {
+                    } catch (IOException e) {
+                    }
+                    //Your code goes here
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
     }
 
     private void sendToBlueToothChat(String msg) {
@@ -445,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int row=0;
         int column=0;
         int obsPointer=0;
+        mazeView.refreshExploration();
         for(int i=2;i<mdf1.length()-2;i++){
             //try {
             if(mdf1.charAt(i)=='1'){

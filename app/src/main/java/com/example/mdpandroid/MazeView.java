@@ -82,7 +82,6 @@ public class MazeView extends View {
                 cells[i][j]= new Cell(i,j);
             }
         }
-
     }
 
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight)
@@ -456,6 +455,16 @@ public class MazeView extends View {
         }
     }
 
+    public void refreshExploration() {
+        for (int x = 0; x < ROWS_SIZE; x++) {
+            for (int y = 0; y < COLUMNS_SIZE; y++) {
+                explored[x][y] = 0;
+                obstacle[x][y] = 0;
+                obstacleNumberGrid[x][y] = null;
+            }
+        }
+    }
+
     public void setExplored(int y, int x){
         if (x>=0 && x<COLUMNS_SIZE && y>=0 && y<ROWS_SIZE){
             explored[y][x]=1;
@@ -499,13 +508,7 @@ public class MazeView extends View {
         currentAngle=0;
         waypoint[0]=1;
         waypoint[1]=1;
-        for(int x=0;x<ROWS_SIZE;x++){
-            for(int y=0;y<COLUMNS_SIZE;y++){
-                explored[x][y]=0;
-                obstacle[x][y]=0;
-                obstacleNumberGrid[x][y] = null;
-            }
-        }
+        refreshExploration();
         invalidate();
     }
 
