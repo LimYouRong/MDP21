@@ -476,14 +476,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mazeView.setCurrentPosition(mdf2,mdf1);
         mazeView.setCurrentAngle(mdf3*90);
 
-        Log.d("MDF12",split[1]+"   "+split[2]);
-        Log.d("MDFLONGSTR4&5",split[4]+"sth\n"+split[5]+"sth");
-        Log.d("mdf4 running hex to binary ","sth: "+split[4].length());
         String mdf4=hexToBinary(split[4]);//mdf1
-        Log.d("mdf4 ended hex to binary ","sth: "+mdf4.length());
-        Log.d("mdf5 running hex to binary ","sth: "+split[5].length());
         String mdf5=hexToBinary(split[5]);//mdf2
-        Log.d("mdf5 ended hex to binary ","sth: "+split[5].length());
         try{
             setMDFShort(mdf4,mdf5);
         }catch (NumberFormatException e){
@@ -492,8 +486,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
     private void setMDFShort(String mdf1,String mdf2){
-        Log.d("#####################3",mdf1+" "+mdf1.length());
-        Log.d("#####################3",mdf2+" "+mdf2.length());
         int row=0;
         int column=0;
         int obsPointer=0;
@@ -548,7 +540,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Matcher m = pattern.matcher(str);
         while(m.find()) {
             String[] splitItem = m.group(1).split(", ");
-            Log.d("Stringitemmmmmmmmmmmmmmmmmmmmmm",m.group(1));
             mazeView.setNumberGrid(splitItem[0],Integer.parseInt(splitItem[1]),Integer.parseInt(splitItem[2]));
         }
         mazeView.invalidate();
