@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,6 +24,7 @@ public class MazeView extends View {
     private int[] touchPos = new int[2];
     private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
     private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
+    private int[][] arrow = new int[5][3]; //max 5 arrows with 3 attri,[x,y,dir]
     private Paint lightBluePaint = new Paint();
     private Paint aviaryBlue = new Paint();
     private Paint bluePaint = new Paint();
@@ -31,6 +33,7 @@ public class MazeView extends View {
     private Paint orangePaint = new Paint();
     private Paint backgroundPaint = new Paint();
     private Paint yellowPaint = new Paint();
+    private Paint redPaint = new Paint();
     private int cellWidth;
     private int cellHeight;
     private String[][] obstacleNumberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
@@ -63,6 +66,7 @@ public class MazeView extends View {
         whitePaint.setColor(Color.WHITE);
         orangePaint.setColor(Color.parseColor("#FF844B"));
         yellowPaint.setColor(Color.YELLOW);
+        redPaint.setColor(Color.RED);
         backgroundPaint.setColor(Color.parseColor("#F4F5FB"));
         backgroundPaint.setStrokeWidth(SPACE_WIDTH);
 
@@ -153,6 +157,15 @@ public class MazeView extends View {
                     else if(Integer.parseInt(item)>9&&Integer.parseInt(item)<16)
                         canvas.drawText(item,(x)*cellWidth+4,(ROWS_SIZE-y)*cellHeight-7,whitePaint);
                 }
+            }
+        }
+
+        //Arrow
+        for (int i = 0; i < 4; i++) {
+            if (arrow[i] != null) {
+                Path[] path = makeArrow(arrow[i][0], arrow[i][1], arrow[i][2]).clone();
+                canvas.drawPath(path[0], redPaint);//draw straight line
+                canvas.drawPath(path[1], redPaint);//draw triangle
             }
         }
 
@@ -500,6 +513,77 @@ public class MazeView extends View {
         fixcurrentAngle();
         updateMap();
     }
+
+    public Path[] makeArrow(int i, int j, int dir) {
+        //these is location of the base vertices of triangle in arrow
+        float tri1x = 0, tri1y = 0, tri2x = 0, tri2y = 0;
+
+        //this is location of straight line of arrow
+        float sx = 0, sy = 0, fx = 0, fy = 0;
+        switch (dir) {
+            case 0:
+                sx = (float) (i * cellWidth * 0.5);
+                sy = (ROWS_SIZE - j) * cellHeight;
+                fx = (float) (i * cellWidth * 0.5);
+                fy = (ROWS_SIZE - 1 - j) * cellHeight;
+                tri1x = (float) (fx * 0.5);
+                tri1y = (float) (fy * 0.5);
+                tri2x = (float) (fx * 0.5 + 0.5);
+                tri2y = (float) (fy * 0.5);
+                break;
+            case 1:
+                sx = i * cellWidth;
+                sy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
+                fx = (i + 1) * cellWidth;
+                fy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
+                tri1x = (float) (fx * 0.5);
+                tri1y = (float) (fy * 0.5);
+                tri2x = (float) (fx * 0.5);
+                tri2y = (float) (fy * 0.5 + 0.5);
+                break;
+            case 2:
+                fx = (float) (i * cellWidth * 0.5);
+                fy = (ROWS_SIZE - j) * cellHeight;
+                sx = (float) ((i) * cellWidth * 0.5);
+                sy = (ROWS_SIZE - 1 - j) * cellHeight;
+                tri1x = (float) (fx * 0.5);
+                tri1y = (float) (fy * 0.5);
+                tri2x = (float) (fx * 0.5 + 0.5);
+                tri2y = (float) (fy * 0.5);
+                break;
+            case 3:
+                fx = i * cellWidth;
+                fy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
+                sx = (i + 1) * cellWidth;
+                sy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
+                tri1x = (float) (fx * 0.5);
+                tri1y = (float) (fy * 0.5);
+                tri2x = (float) (fx * 0.5);
+                tri2y = (float) (fy * 0.5 + 0.5);
+                break;
+            default:
+                break;
+        }
+
+        Path[] ret = new Path[2];
+        //draw Straight line for arrow
+        Path linePath = new Path();
+        linePath.moveTo(sx, sy);
+        linePath.lineTo(fx, fy);
+        linePath.close();
+        ret[0] = linePath;
+
+        //draw triangle for arrow
+        Path triangle = new Path();
+        triangle.moveTo(fx, fy);
+        triangle.lineTo(tri1x, tri1y);
+        triangle.lineTo(tri2x, tri2y);
+        triangle.close();
+        ret[1] = triangle;
+
+        return ret;
+    }
+
     public void resetMap(){
         robotCenter[0]=1;
         robotCenter[1]=1;
