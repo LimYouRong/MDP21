@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+
 public class MazeView extends View {
 
     private static final int COLUMNS_SIZE = 15;  //Range of X-axis
@@ -38,6 +40,7 @@ public class MazeView extends View {
     private int cellHeight;
     private String[][] obstacleNumberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
     MainActivity activityMain = (MainActivity) getContext();
+    private HashMap<String, String> imageMap;
 
 
     //robot starting coordinates
@@ -71,6 +74,7 @@ public class MazeView extends View {
         backgroundPaint.setStrokeWidth(SPACE_WIDTH);
 
         initalizeMaze();
+        initalizeImageLUT();
     }
 
     public void setWaypoint(int[] waypoint) {
@@ -496,10 +500,30 @@ public class MazeView extends View {
         }
     }
 
+    private void initalizeImageLUT() {
+        imageMap = new HashMap<String, String>();
+        imageMap.put("0", "down");
+        imageMap.put("1", "left");
+        imageMap.put("2", "right");
+        imageMap.put("3", "up");
+        imageMap.put("4", "circle");
+        imageMap.put("5", "eight");
+        imageMap.put("6", "nine");
+        imageMap.put("7", "seven");
+        imageMap.put("8", "six");
+        imageMap.put("9", "v");
+        imageMap.put("10", "w");
+        imageMap.put("11", "x");
+        imageMap.put("12", "y");
+        imageMap.put("13", "z");
+        imageMap.put("14", "zero");
+    }
+
     public void setNumberGrid(String item, int column, int row){
         if(column>=0 && column<COLUMNS_SIZE && row>=0 && row<ROWS_SIZE){
+
             if(obstacle[row-1][column-1]==1){
-                obstacleNumberGrid[row - 1][column - 1] = item;
+                obstacleNumberGrid[row - 1][column - 1] = imageMap.get(item);
             }else{
                 Log.d("Not obstacle so no number grid!","X: "+column+" Y: "+row);
             }
