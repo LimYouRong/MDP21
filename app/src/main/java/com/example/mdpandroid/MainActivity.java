@@ -282,15 +282,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
         refresh_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mazeView.invalidate();
-                for (ArrayList li : imageResult) {
-                    Log.d("*********************", li.toString() + "");
-                    mazeView.setObstacle(Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(0).toString()));
-                    mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
-                }
 
+            @Override
+            public void onClick(View view) {//TODO: impleement thread "lock" to setobstacles when done
+                Toast.makeText(MainActivity.this, "REFRESH BUTTON PRESSED", Toast.LENGTH_SHORT).show();
+                mazeView.invalidate();
+                Toast.makeText(MainActivity.this, "Printing results in 5s", Toast.LENGTH_SHORT).show();
+                try {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            displayImageResult();
+                            Log.d("INTENTIONAL DELAY", "SENT");
+                        }
+                    }, 5000);
+
+                } catch (Exception e) {
+
+                } finally {//items in li : obs x,obs y,robotx,roboty,direction, tag
+                    for (ArrayList li : imageResult) {//Create obstacle and numbergrid
+                        Log.d("*********************", li.toString() + "");
+                        mazeView.setObstacle(Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(0).toString()));
+                        mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
+
+                        //TODO JIAWEN's method for arrow using li.get
+                    }
+                }
 
             }
         });
@@ -369,15 +386,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         imageResult = new ArrayList<ArrayList<String>>();
 
+    }
 
+    private void displayImageResult() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", "A");
                     try {
+                        Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", "B");
                         // Create a URL for the desired page
-                        URL url = new URL("https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/result.txt");
-
+                        String temp = "http://192.168.21.15/location.txt";
+//                        URL url = new URL("https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/result.txt");
+                        URL url = new URL(temp);
                         // Read all the text returned by the server
                         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                         String str;
@@ -390,22 +412,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                                 list.add(i);
                             }
                             imageResult.add(list);
-//                            list.add();
-//                            (Arrays.asList(str.split(",")));
                         }
                         in.close();
                     } catch (MalformedURLException e) {
+                        Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", e.getMessage());
+
                     } catch (IOException e) {
+                        Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", e.getMessage());
                     }
                     //Your code goes here
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", e.getMessage());
                 }
             }
         });
 
         thread.start();
-
     }
 
     private void sendToBlueToothChat(String msg) {
