@@ -24,7 +24,7 @@ public class MazeView extends View {
     private int[] touchPos = new int[2];
     private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
     private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
-    private int[][] arrow = new int[5][3]; //max 5 arrows with 3 attri,[x,y,dir]
+    private int[][] arrow = new int[20][3]; //max 5 arrows with 3 attri,[x,y,dir]
     private Paint lightBluePaint = new Paint();
     private Paint aviaryBlue = new Paint();
     private Paint bluePaint = new Paint();
@@ -565,6 +565,7 @@ public class MazeView extends View {
                 break;
         }
 
+
         Path[] ret = new Path[2];
         //draw Straight line for arrow
         Path linePath = new Path();
@@ -582,6 +583,17 @@ public class MazeView extends View {
         ret[1] = triangle;
 
         return ret;
+    }
+
+    public void setArrow(int x, int y, int dir){
+        for(int i=0; i<arrow.length;i++){
+            if(arrow[i]==null) {
+                arrow[i][1] = x;
+                arrow[i][2] = y;
+                arrow[i][3] = dir;
+            }
+        }
+        invalidate();
     }
 
     public void resetMap(){

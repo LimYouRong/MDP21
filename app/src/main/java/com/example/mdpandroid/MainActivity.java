@@ -306,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
 
                         //TODO JIAWEN's method for arrow using li.get
+                        mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
                     }
                 }
 
