@@ -340,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                        mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1,1*90,li.get(5).toString());
 ////                        mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
 //
-//                        //TODO JIAWEN's method for arrow using li.get
 //                        mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
 //                    }
                     //Not using finally due to concurrency issues with thread. Put method inside displayImageResult() instead
@@ -447,8 +446,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     try {
                         Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", "B");
                         // Create a URL for the desired page
-                        String temp = "http://192.168.21.15/location.txt";
-//                        String temp = "https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/resultsingle.txt";
+//                        String temp = "http://192.168.21.15/location.txt";
+                        String temp = "https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/resultsingle.txt";
                         URL url = new URL(temp);
                         // Read all the text returned by the server
                         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));

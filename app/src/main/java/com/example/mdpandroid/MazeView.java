@@ -42,7 +42,7 @@ public class MazeView extends View {
     private String[][] obstacleNumberGrid = new String[ROWS_SIZE][COLUMNS_SIZE];
     MainActivity activityMain = (MainActivity) getContext();
     private HashMap<String, String> imageMap;
-
+    private ArrayList<ArrayList<Integer>> arrowIcons;
 
     //robot starting coordinates
     private int[] robotFront = {1, 2}; //x,y
@@ -74,6 +74,7 @@ public class MazeView extends View {
         backgroundPaint.setColor(Color.parseColor("#F4F5FB"));
         backgroundPaint.setStrokeWidth(SPACE_WIDTH);
 
+        arrowIcons = new ArrayList<ArrayList<Integer>>();
         initalizeMaze();
         initalizeImageLUT();
     }
@@ -174,6 +175,23 @@ public class MazeView extends View {
                 canvas.drawPath(path[1], redPaint);//draw triangle
             }
         }
+        //Arrow v2
+        for (ArrayList<Integer> li : arrowIcons) {
+            Log.d("runnning make arrow!", ":" + li + "  " + li.get(0) + " " + li.get(1) + "  " + li.get(2));
+            Path[] path = makeArrow(li.get(0), li.get(1), li.get(2)).clone();
+            canvas.drawPath(path[0], redPaint);//draw straight line
+            canvas.drawPath(path[1], redPaint);//draw triangle
+        }
+        //Arrow with a arraylist
+//        for (int i = 0; i < 9; i++) {
+//            if (arrow[i][0] != 0 || arrow[i][1] != 0 || arrow[i][2] != 0) {
+//                Log.d("runnning make arrow!", ":" + i + "  " + arrow[i][0] + " " + arrow[i][1] + "  " + arrow[i][2]);
+//                Path[] path = makeArrow(arrow[i][0], arrow[i][1], arrow[i][2]).clone();
+//                canvas.drawPath(path[0], redPaint);//draw straight line
+//                canvas.drawPath(path[1], redPaint);//draw triangle
+//            }
+//        }
+
 
         //startZone
         for(int i=0;i<=2;i++)
@@ -484,13 +502,13 @@ public class MazeView extends View {
 
     public void findBestObstacle(ArrayList li) {
 
-        int x = Integer.parseInt(li.get(0).toString());
-        int y = Integer.parseInt(li.get(1).toString());
-        int cur_x = Integer.parseInt(li.get(2).toString());
-        int cur_y = Integer.parseInt(li.get(3).toString());
+        int x = Integer.parseInt(li.get(0).toString());//x is current_x
+        int y = Integer.parseInt(li.get(1).toString());//y is current_y
+//        int cur_x = Integer.parseInt(li.get(2).toString());//We dont need this
+//        int cur_y = Integer.parseInt(li.get(3).toString());//we dont need this
         int dir = Integer.parseInt(li.get(4).toString()) * 90;
+        dir = 0 * 90;
 
-        //TODO JIAWEN's method for arrow using li.get
         //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
 
         String tag = li.get(5).toString();
@@ -502,8 +520,9 @@ public class MazeView extends View {
 //            setObstacle(robotCenter[0]-(2+num4),robotCenter[1]+1);
             if (isObstacle(x - 2, y + 1)) {//c => a
                 setNumberGrid(tag, x - 2, y + 1);
-//                setArrow(cur_x,cur_y,dir);
-                Log.d("111111111111111111111111111", "pinside a");
+//              setArrow(x-1,y+1,3);
+                setArrow(x, y + 2, 3);
+                Log.d("111111111111111111111111111", "TESTpinside a");
             } else if (isObstacle(x - 2, y)) {//a =>b
                 setNumberGrid(tag, x - 2, y);
                 Log.d("111111111111111111111111111", "pinside b");
@@ -750,6 +769,7 @@ public class MazeView extends View {
     }
 
     public void setArrow(int x, int y, int dir) {
+        Log.d("%%%%%%%%%%%%%%%%%%%%", "SET ARROW METHOD");
         for (int i = 0; i < arrow.length; i++) {
             if (arrow[i] == null) {
                 arrow[i][1] = x;
@@ -757,6 +777,11 @@ public class MazeView extends View {
                 arrow[i][3] = dir;
             }
         }
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        arr.add(x);
+        arr.add(y);
+        arr.add(dir);
+        arrowIcons.add(arr);
         invalidate();
     }
 
