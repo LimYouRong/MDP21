@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MazeView extends View {
@@ -26,7 +27,7 @@ public class MazeView extends View {
     private int[] touchPos = new int[2];
     private int[][] obstacle = new int[ROWS_SIZE][COLUMNS_SIZE];
     private int[][] explored = new int[ROWS_SIZE][COLUMNS_SIZE];
-    private int[][] arrow = new int[5][3]; //max 5 arrows with 3 attri,[x,y,dir]
+    private int[][] arrow = new int[10][3]; //max 5 arrows with 3 attri,[x,y,dir]
     private Paint lightBluePaint = new Paint();
     private Paint aviaryBlue = new Paint();
     private Paint bluePaint = new Paint();
@@ -165,8 +166,9 @@ public class MazeView extends View {
         }
 
         //Arrow
-        for (int i = 0; i < 4; i++) {
-            if (arrow[i] != null) {
+        for (int i = 0; i < 9; i++) {
+            if (arrow[i][0] != 0 || arrow[i][1] != 0 || arrow[i][2] != 0) {
+                Log.d("runnning make arrow!", ":" + i + "  " + arrow[i][0] + " " + arrow[i][1] + "  " + arrow[i][2]);
                 Path[] path = makeArrow(arrow[i][0], arrow[i][1], arrow[i][2]).clone();
                 canvas.drawPath(path[0], redPaint);//draw straight line
                 canvas.drawPath(path[1], redPaint);//draw triangle
@@ -480,7 +482,19 @@ public class MazeView extends View {
         return false;
     }
 
-    public void findBestObstacle(int x, int y, int dir, String tag) {
+    public void findBestObstacle(ArrayList li) {
+
+        int x = Integer.parseInt(li.get(0).toString());
+        int y = Integer.parseInt(li.get(1).toString());
+        int cur_x = Integer.parseInt(li.get(2).toString());
+        int cur_y = Integer.parseInt(li.get(3).toString());
+        int dir = Integer.parseInt(li.get(4).toString()) * 90;
+
+        //TODO JIAWEN's method for arrow using li.get
+        //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
+
+        String tag = li.get(5).toString();
+        //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
         Log.d("111111111111111111111111111", "inside findBestObs method");
         Log.d("(((((((((((((((((((())))))))))))))))))", x + " and " + y + " and " + dir + " and tag " + tag);
         if (dir == 0) {
@@ -488,6 +502,7 @@ public class MazeView extends View {
 //            setObstacle(robotCenter[0]-(2+num4),robotCenter[1]+1);
             if (isObstacle(x - 2, y + 1)) {//c => a
                 setNumberGrid(tag, x - 2, y + 1);
+//                setArrow(cur_x,cur_y,dir);
                 Log.d("111111111111111111111111111", "pinside a");
             } else if (isObstacle(x - 2, y)) {//a =>b
                 setNumberGrid(tag, x - 2, y);
@@ -662,54 +677,64 @@ public class MazeView extends View {
         float sx = 0, sy = 0, fx = 0, fy = 0;
         switch (dir) {
             case 0:
-                sx = (float) (i * cellWidth * 0.5);
-                sy = (ROWS_SIZE - j) * cellHeight;
-                fx = (float) (i * cellWidth * 0.5);
-                fy = (ROWS_SIZE - 1 - j) * cellHeight;
-                tri1x = (float) (fx * 0.5);
-                tri1y = (float) (fy * 0.5);
-                tri2x = (float) (fx * 0.5 + 0.5);
-                tri2y = (float) (fy * 0.5);
+                sx = (float) (i * cellWidth - 0.5 * cellHeight);
+                sy = (ROWS_SIZE + 1 - j) * cellHeight;
+                fx = (float) (i * cellWidth - 0.5 * cellHeight);
+                fy = (ROWS_SIZE - j) * cellHeight;
+                tri1x = (float) (fx - 0.5 * cellHeight);
+                tri1y = (float) (fy + 0.5 * cellHeight);
+                tri2x = (float) (fx + 0.5 * cellHeight);
+                tri2y = (float) (fy + 0.5 * cellHeight);
                 break;
             case 1:
-                sx = i * cellWidth;
-                sy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
-                fx = (i + 1) * cellWidth;
-                fy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
-                tri1x = (float) (fx * 0.5);
-                tri1y = (float) (fy * 0.5);
-                tri2x = (float) (fx * 0.5);
-                tri2y = (float) (fy * 0.5 + 0.5);
+                sx = (i - 1) * cellWidth;
+                sy = (float) ((ROWS_SIZE - j) * cellHeight + 0.5 * cellHeight);
+                fx = (i) * cellWidth;
+                fy = (float) ((ROWS_SIZE - j) * cellHeight + 0.5 * cellHeight);
+                tri1x = (float) (fx - 0.5 * cellHeight);
+                tri1y = (float) (fy - 0.5 * cellHeight);
+                tri2x = (float) (fx - 0.5 * cellHeight);
+                tri2y = (float) (fy + 0.5 * cellHeight);
                 break;
             case 2:
-                fx = (float) (i * cellWidth * 0.5);
-                fy = (ROWS_SIZE - j) * cellHeight;
-                sx = (float) ((i) * cellWidth * 0.5);
-                sy = (ROWS_SIZE - 1 - j) * cellHeight;
-                tri1x = (float) (fx * 0.5);
-                tri1y = (float) (fy * 0.5);
-                tri2x = (float) (fx * 0.5 + 0.5);
-                tri2y = (float) (fy * 0.5);
+                fx = (float) (i * cellWidth - 0.5 * cellHeight);
+                fy = (ROWS_SIZE + 1 - j) * cellHeight;
+                sx = (float) ((i) * cellWidth - 0.5 * cellHeight);
+                sy = (ROWS_SIZE - j) * cellHeight;
+                tri1x = (float) (fx - 0.5 * cellHeight);
+                tri1y = (float) (fy - 0.5 * cellHeight);
+                tri2x = (float) (fx + 0.5 * cellHeight);
+                tri2y = (float) (fy - 0.5 * cellHeight);
                 break;
             case 3:
-                fx = i * cellWidth;
-                fy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
-                sx = (i + 1) * cellWidth;
-                sy = (float) ((ROWS_SIZE - j) * cellHeight * 0.5);
-                tri1x = (float) (fx * 0.5);
-                tri1y = (float) (fy * 0.5);
-                tri2x = (float) (fx * 0.5);
-                tri2y = (float) (fy * 0.5 + 0.5);
+                fx = (i - 1) * cellWidth;
+                fy = (float) ((ROWS_SIZE - j) * cellHeight + 0.5 * cellHeight);
+                sx = (i) * cellWidth;
+                sy = (float) ((ROWS_SIZE - j) * cellHeight + 0.5 * cellHeight);
+                tri1x = (float) (fx + 0.5 * cellHeight);
+                tri1y = (float) (fy - 0.5 * cellHeight);
+                tri2x = (float) (fx + 0.5 * cellHeight);
+                tri2y = (float) (fy + 0.5 * cellHeight);
                 break;
             default:
                 break;
         }
+        Log.d("sx", ": " + sx);
+        Log.d("sy", ": " + sy);
+        Log.d("fx", ": " + fx);
+        Log.d("fy", ": " + fy);
+        Log.d("tri1x", ": " + tri1x);
+        Log.d("tri1y", ": " + tri1y);
+        Log.d("tri2x", ": " + tri2x);
+        Log.d("tri2y", ": " + tri2y);
 
         Path[] ret = new Path[2];
         //draw Straight line for arrow
         Path linePath = new Path();
-        linePath.moveTo(sx, sy);
-        linePath.lineTo(fx, fy);
+        linePath.moveTo(sx - 2, sy - 2);
+        linePath.lineTo(fx - 2, fy - 2);
+        linePath.lineTo(fx + 2, fy + 2);
+        linePath.lineTo(sx + 2, sy + 2);
         linePath.close();
         ret[0] = linePath;
 
@@ -722,6 +747,17 @@ public class MazeView extends View {
         ret[1] = triangle;
 
         return ret;
+    }
+
+    public void setArrow(int x, int y, int dir) {
+        for (int i = 0; i < arrow.length; i++) {
+            if (arrow[i] == null) {
+                arrow[i][1] = x;
+                arrow[i][2] = y;
+                arrow[i][3] = dir;
+            }
+        }
+        invalidate();
     }
 
     public void resetMap(){

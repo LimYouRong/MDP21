@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 ////                        mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
 //
 //                        //TODO JIAWEN's method for arrow using li.get
-//
+//                        mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
 //                    }
                     //Not using finally due to concurrency issues with thread. Put method inside displayImageResult() instead
                 }
@@ -475,10 +475,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                        //                              xfx         21cmx     42cmx
 //                        //                              xcx         64xxx     65xxx
                             //Lastest
-
-                            mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()), Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(4).toString()) * 90, li.get(5).toString());
-//                        //TODO JIAWEN's method for arrow using li.get
-
+                            mazeView.findBestObstacle(li);
+//                            mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()), Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(4).toString()) * 90, li.get(5).toString());
+//
 //
                         }
                     } catch (MalformedURLException e) {
