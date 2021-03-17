@@ -90,6 +90,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     boolean autoUpdate;
     private ArrayList<ArrayList<String>> imageResult;
 
+    //update status whenever connection changes
+    private BroadcastReceiver BluetoothMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String theMessage = intent.getStringExtra("bluetoothMessage");
+            Log.d("MESSAGE Received ***************************************", theMessage);
+
+            if (theMessage.equals("Finish")) {
+                setStatusMessage("WAITING");
+            } else if (theMessage.regionMatches(0, "OBS|", 0, 4)) {
+                Log.d("OBS| TAG", theMessage);
+                //OBS|2 2 2 4 2 2|x|y|direction
+                String[] split = theMessage.split("\\|");
+//                mazeView.setCurrentPosition(Integer.parseInt(split[2]),Integer.parseInt(split[3]));
+                mazeView.realTimeObstacleCheck(split[1]);
+                mazeView.setCurrentPosition(Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+                mazeView.setCurrentAngle(Integer.parseInt(split[4]));
+            }
+            if (theMessage.regionMatches(0, "MDFshort|", 0, 4)) {
+                findStr1Str2(theMessage);
+            }
+            if (theMessage.regionMatches(0, "MDFlong|", 0, 4)) {
+                mdfLong(theMessage);
+            } else if (theMessage.regionMatches(0, "NUM|", 0, 4)) {
+                addNumberGrid(theMessage);
+            }
+            //update map
+            updateBluetoothChat(1, theMessage);
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,15 +224,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         Log.d("INTENTIONAL DELAY","SENT");
                     }
                 }, 1000);
-
-
                 setStatusMessage("Image recog in progress");
-
             }
         });
 
 
-        image_recog_button = findViewById(R.id.image_recog_button);
         refresh_button = findViewById(R.id.refresh_button);
         set_wp_button = findViewById(R.id.set_wp_button);
         set_rob_button = findViewById(R.id.set_rob_button);
@@ -295,18 +323,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             displayImageResult();
                             Log.d("INTENTIONAL DELAY", "SENT");
                         }
-                    }, 5000);
+                    }, 2000);
 
                 } catch (Exception e) {
 
                 } finally {//items in li : obs x,obs y,robotx,roboty,direction, tag
-                    for (ArrayList li : imageResult) {//Create obstacle and numbergrid
-                        Log.d("*********************", li.toString() + "");
-                        mazeView.setObstacle(Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(0).toString()));
-                        mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
-
-                        //TODO JIAWEN's method for arrow using li.get
-                    }
+//                    for (ArrayList li : imageResult) {//Create obstacle and numbergrid
+//                        Log.d("*********************", li.toString() + "");
+//                        //Should we use fuzzy logic to place number grid? eg. If block is not a obs, find next closest obs
+//                        //                              526         c = camera, m = middle, f = front(direction)
+//                        //prioity on which is a obs:    314         53xfx
+//                        //                              xfx         21cmx
+//                        //                              xcx         64xxx
+//
+//
+//                        mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1,1*90,li.get(5).toString());
+////                        mazeView.setNumberGrid(li.get(2).toString(), Integer.parseInt(li.get(0).toString()) + 1, Integer.parseInt(li.get(1).toString()) + 1);
+//
+//                        //TODO JIAWEN's method for arrow using li.get
+//
+//                    }
+                    //Not using finally due to concurrency issues with thread. Put method inside displayImageResult() instead
                 }
 
             }
@@ -388,6 +425,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    private void sendToBlueToothChat(String msg) {
+        Intent intent = new Intent("BlueToothChatSendIntent");
+        intent.putExtra("bluetoothTextSend", msg);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        updateBluetoothChat(0, msg);
+    }
+
+    private void updateBluetoothChat(int id, String msg) {
+        Message msgOut = new Message(id, msg);//id = 0 for user who sent this message, 1 for message received
+        messageList.add(messageList.size(), msgOut);
+        messageAdapter.notifyDataSetChanged();
+    }
+
     private void displayImageResult() {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -398,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", "B");
                         // Create a URL for the desired page
                         String temp = "http://192.168.21.15/location.txt";
-//                        URL url = new URL("https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/result.txt");
+//                        String temp = "https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/resultsingle.txt";
                         URL url = new URL(temp);
                         // Read all the text returned by the server
                         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -408,12 +458,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             // str is one line of text; readLine() strips the newline character(s)
                             Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", str);
 
+                            //Whats inside every line
+                            // obs x,obs y,robotx,roboty,direction, tag
                             for (String i : str.split(",")) {
                                 list.add(i);
                             }
                             imageResult.add(list);
                         }
                         in.close();
+
+                        for (ArrayList li : imageResult) {//Create obstacle and numbergrid
+//                        Log.d("*********************", li.toString() + "");
+//                        //Should we use fuzzy logic to place number grid eg. If block is not a obs, find next closest obs
+//                        //                              526         c = camera, m = middle, f = front(direction)
+//                        //prioity on which is a obs:    314         53xfx     31xfx
+//                        //                              xfx         21cmx     42cmx
+//                        //                              xcx         64xxx     65xxx
+                            //Lastest
+
+                            mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()), Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(4).toString()) * 90, li.get(5).toString());
+//                        //TODO JIAWEN's method for arrow using li.get
+
+//
+                        }
                     } catch (MalformedURLException e) {
                         Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", e.getMessage());
 
@@ -429,50 +496,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         thread.start();
     }
-
-    private void sendToBlueToothChat(String msg) {
-        Intent intent = new Intent("BlueToothChatSendIntent");
-        intent.putExtra("bluetoothTextSend", msg);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        updateBluetoothChat(0,msg);
-    }
-
-    private void updateBluetoothChat(int id,String msg){
-        Message msgOut = new Message(id,msg);//id = 0 for user who sent this message, 1 for message received
-        messageList.add(messageList.size(), msgOut);
-        messageAdapter.notifyDataSetChanged();
-
-    }
-    //update status whenever connection changes
-    private BroadcastReceiver BluetoothMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String theMessage = intent.getStringExtra("bluetoothMessage");
-            Log.d("MESSAGE Received ***************************************",theMessage);
-
-            if(theMessage.equals("Finish")){
-                setStatusMessage("WAITING");
-            }
-            else if(theMessage.regionMatches(0,"OBS|",0,4)){
-                Log.d("OBS| TAG",theMessage);
-                String []split = theMessage.split("\\|");
-                mazeView.realTimeObstacleCheck(split[1]);
-            }
-            if(theMessage.regionMatches(0,"MDFshort|",0,4)){
-                findStr1Str2(theMessage);
-            }
-            if(theMessage.regionMatches(0,"MDFlong|",0,4)){
-                mdfLong(theMessage);
-            }
-
-            else if(theMessage.regionMatches(0,"NUM|",0,4)){
-                addNumberGrid(theMessage);
-            }
-            //update map
-            updateBluetoothChat(1,theMessage);
-
-        }
-    };
     private BroadcastReceiver BluetoothStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -562,7 +585,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Matcher m = pattern.matcher(str);
         while(m.find()) {
             String[] splitItem = m.group(1).split(", ");
-            mazeView.setNumberGrid(splitItem[0],Integer.parseInt(splitItem[1]),Integer.parseInt(splitItem[2]));
+            mazeView.setNumberGrid(splitItem[0], Integer.parseInt(splitItem[2]) - 1, Integer.parseInt(splitItem[1]) - 1);
+            //-1 Due to our maze starting at (0,0) , while maze received starts at (1,1)
         }
         mazeView.invalidate();
 

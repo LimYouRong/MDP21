@@ -472,6 +472,106 @@ public class MazeView extends View {
         }
     }
 
+    public boolean isObstacle(int x, int y) {
+        if (x >= 0 && x < COLUMNS_SIZE && y >= 0 && y < ROWS_SIZE) {
+            return obstacle[y][x] != 0;
+        }
+        Log.d("QQQQQQQQQQQQQQQQQ", "OBS outside of cells");
+        return false;
+    }
+
+    public void findBestObstacle(int x, int y, int dir, String tag) {
+        Log.d("111111111111111111111111111", "inside findBestObs method");
+        Log.d("(((((((((((((((((((())))))))))))))))))", x + " and " + y + " and " + dir + " and tag " + tag);
+        if (dir == 0) {
+            Log.d("111111111111111111111111111", "pinside 1");
+//            setObstacle(robotCenter[0]-(2+num4),robotCenter[1]+1);
+            if (isObstacle(x - 2, y + 1)) {//c => a
+                setNumberGrid(tag, x - 2, y + 1);
+                Log.d("111111111111111111111111111", "pinside a");
+            } else if (isObstacle(x - 2, y)) {//a =>b
+                setNumberGrid(tag, x - 2, y);
+                Log.d("111111111111111111111111111", "pinside b");
+            } else if (isObstacle(x - 3, y + 1)) {//e =>c
+                setNumberGrid(tag, x - 3, y + 1);
+                Log.d("111111111111111111111111111", "pinside c");
+            } else if (isObstacle(x - 3, y)) {//b =>d
+                setNumberGrid(tag, x - 3, y);
+                Log.d("111111111111111111111111111", "pinside d");
+            } else if (isObstacle(x - 2, y - 1)) {//d=>e
+                setNumberGrid(tag, x - 2, y - 1);
+                Log.d("111111111111111111111111111", "pinside e");
+            } else if (isObstacle(x - 3, y - 1)) {//f
+                setNumberGrid(tag, x - 3, y - 1);
+                Log.d("111111111111111111111111111", "pinside f");
+            }
+        } else if (dir == 90) {
+            Log.d("111111111111111111111111111", "inside 1");
+            if (isObstacle(x + 1, y + 2)) {//c =>a
+                setNumberGrid(tag, x + 1, y + 2);
+                Log.d("111111111111111111111111111", "inside a");
+            } else if (isObstacle(x, y + 2)) {//a =>b
+                setNumberGrid(tag, x, y + 2);
+                Log.d("111111111111111111111111111", "inside b");
+            } else if (isObstacle(x + 1, y + 3)) {//e => c
+                setNumberGrid(tag, x + 1, y + 3);
+                Log.d("111111111111111111111111111", "inside c");
+            } else if (isObstacle(x, y + 3)) {//b=>d
+                setNumberGrid(tag, x, y + 3);
+                Log.d("111111111111111111111111111", "inside d");
+            } else if (isObstacle(x - 1, y + 2)) {//d=>e
+                setNumberGrid(tag, x - 1, y + 2);
+                Log.d("111111111111111111111111111", "inside e");
+            } else if (isObstacle(x - 1, y + 3)) {//f problem, test again
+                setNumberGrid(tag, x - 1, y + 3);
+                Log.d("111111111111111111111111111", "inside f");
+            }
+        } else if (dir == 180) {
+            if (isObstacle(x + 2, y - 1)) {//c =>a
+                setNumberGrid(tag, x + 2, y - 1);
+                Log.d("111111111111111111111111111", "inside a");
+            } else if (isObstacle(x + 2, y)) {//a=>b
+                setNumberGrid(tag, x + 2, y);
+                Log.d("111111111111111111111111111", "inside b");
+            } else if (isObstacle(x + 3, y - 1)) {//e=>c
+                setNumberGrid(tag, x + 3, y - 1);
+                Log.d("111111111111111111111111111", "inside c");
+            } else if (isObstacle(x + 3, y)) {//b=>d
+                setNumberGrid(tag, x + 3, y);
+                Log.d("111111111111111111111111111", "inside d");
+            } else if (isObstacle(x + 2, y + 1)) {//d=>e
+                setNumberGrid(tag, x + 2, y + 1);
+                Log.d("111111111111111111111111111", "inside e");
+            } else if (isObstacle(x + 3, y + 1)) {//f
+                setNumberGrid(tag, x + 3, y + 1);
+                Log.d("111111111111111111111111111", "inside f");
+            }
+        } else if (dir == 270) {
+            if (isObstacle(x - 1, y - 2)) {//c=>a
+                setNumberGrid(tag, x - 1, y - 2);
+                Log.d("111111111111111111111111111", "inside a");
+            } else if (isObstacle(x, y - 2)) {//a=>b
+                setNumberGrid(tag, x, y - 2);
+                Log.d("111111111111111111111111111", "inside b");
+            } else if (isObstacle(x - 1, y - 3)) {//e=>c
+                setNumberGrid(tag, x - 1, y - 3);
+                Log.d("111111111111111111111111111", "inside c");
+            } else if (isObstacle(x, y - 3)) {//b=>d
+                setNumberGrid(tag, x, y - 3);
+                Log.d("111111111111111111111111111", "inside d");
+            } else if (isObstacle(x + 1, y - 2)) {//d=>e
+                setNumberGrid(tag, x + 1, y - 2);
+                Log.d("111111111111111111111111111", "inside e");
+            } else if (isObstacle(x + 1, y - 3)) {//f
+                setNumberGrid(tag, x + 1, y - 3);
+                Log.d("111111111111111111111111111", "inside f");
+            }
+        } else {
+            Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
+        }
+
+        invalidate();
+    }
     public void refreshExploration() {
         for (int x = 0; x < ROWS_SIZE; x++) {
             for (int y = 0; y < COLUMNS_SIZE; y++) {
@@ -502,30 +602,46 @@ public class MazeView extends View {
 
     private void initalizeImageLUT() {
         imageMap = new HashMap<String, String>();
-        imageMap.put("0", "down");
-        imageMap.put("1", "left");
-        imageMap.put("2", "right");
-        imageMap.put("3", "up");
-        imageMap.put("4", "circle");
-        imageMap.put("5", "eight");
-        imageMap.put("6", "nine");
-        imageMap.put("7", "seven");
-        imageMap.put("8", "six");
-        imageMap.put("9", "v");
-        imageMap.put("10", "w");
-        imageMap.put("11", "x");
-        imageMap.put("12", "y");
-        imageMap.put("13", "z");
-        imageMap.put("14", "zero");
+//        imageMap.put("0", "down");
+//        imageMap.put("1", "left");
+//        imageMap.put("2", "right");
+//        imageMap.put("3", "up");
+//        imageMap.put("4", "circle");
+//        imageMap.put("5", "eight");
+//        imageMap.put("6", "nine");
+//        imageMap.put("7", "seven");
+//        imageMap.put("8", "six");
+//        imageMap.put("9", "v");
+//        imageMap.put("10", "w");
+//        imageMap.put("11", "x");
+//        imageMap.put("12", "y");
+//        imageMap.put("13", "z");
+//        imageMap.put("14", "zero");
+        imageMap.put("0", "2");
+        imageMap.put("1", "4");
+        imageMap.put("2", "3");
+        imageMap.put("3", "1");
+        imageMap.put("4", "5");
+        imageMap.put("5", "8");
+        imageMap.put("6", "9");
+        imageMap.put("7", "7");
+        imageMap.put("8", "6");
+        imageMap.put("9", "11");
+        imageMap.put("10", "12");
+        imageMap.put("11", "13");
+        imageMap.put("12", "14");
+        imageMap.put("13", "15");
+        imageMap.put("14", "10");
     }
 
-    public void setNumberGrid(String item, int column, int row){
-        if(column>=0 && column<COLUMNS_SIZE && row>=0 && row<ROWS_SIZE){
+    public void setNumberGrid(String item, int x, int y) {
+        if (x >= 0 && x < COLUMNS_SIZE && y >= 0 && y < ROWS_SIZE) {
 
-            if(obstacle[row-1][column-1]==1){
-                obstacleNumberGrid[row - 1][column - 1] = imageMap.get(item);
+            if (obstacle[y][x] == 1) {
+                obstacleNumberGrid[y][x] = imageMap.get(item);
+                Log.d("{{{{{{{{{{{{{{{{{{{{{{{{{", "x: " + (x) + " y: " + (y));
             }else{
-                Log.d("Not obstacle so no number grid!","X: "+column+" Y: "+row);
+                Log.d("Not obstacle so no number grid!", "x: " + (x) + " y: " + (y));
             }
         }else{
             Log.d("QQQQQQQQQQQQQQQQQ","numbergrid outside of cells");
