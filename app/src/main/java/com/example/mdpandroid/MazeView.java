@@ -167,14 +167,14 @@ public class MazeView extends View {
         }
 
         //Arrow
-        for (int i = 0; i < 9; i++) {
-            if (arrow[i][0] != 0 || arrow[i][1] != 0 || arrow[i][2] != 0) {
-                Log.d("runnning make arrow!", ":" + i + "  " + arrow[i][0] + " " + arrow[i][1] + "  " + arrow[i][2]);
-                Path[] path = makeArrow(arrow[i][0], arrow[i][1], arrow[i][2]).clone();
-                canvas.drawPath(path[0], redPaint);//draw straight line
-                canvas.drawPath(path[1], redPaint);//draw triangle
-            }
-        }
+//        for (int i = 0; i < 9; i++) {
+//            if (arrow[i][0] != 0 || arrow[i][1] != 0 || arrow[i][2] != 0) {
+//                Log.d("runnning make arrow!", ":" + i + "  " + arrow[i][0] + " " + arrow[i][1] + "  " + arrow[i][2]);
+//                Path[] path = makeArrow(arrow[i][0], arrow[i][1], arrow[i][2]).clone();
+//                canvas.drawPath(path[0], redPaint);//draw straight line
+//                canvas.drawPath(path[1], redPaint);//draw triangle
+//            }
+//        }
         //Arrow v2
         for (ArrayList<Integer> li : arrowIcons) {
             Log.d("runnning make arrow!", ":" + li + "  " + li.get(0) + " " + li.get(1) + "  " + li.get(2));
@@ -510,7 +510,6 @@ public class MazeView extends View {
         dir = 0 * 90;
 
         //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
-
         String tag = li.get(5).toString();
         //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
         Log.d("111111111111111111111111111", "inside findBestObs method");
@@ -520,84 +519,106 @@ public class MazeView extends View {
 //            setObstacle(robotCenter[0]-(2+num4),robotCenter[1]+1);
             if (isObstacle(x - 2, y + 1)) {//c => a
                 setNumberGrid(tag, x - 2, y + 1);
-//              setArrow(x-1,y+1,3);
                 setArrow(x, y + 2, 3);
                 Log.d("111111111111111111111111111", "TESTpinside a");
             } else if (isObstacle(x - 2, y)) {//a =>b
                 setNumberGrid(tag, x - 2, y);
+                setArrow(x, y + 1, 3);
                 Log.d("111111111111111111111111111", "pinside b");
             } else if (isObstacle(x - 3, y + 1)) {//e =>c
                 setNumberGrid(tag, x - 3, y + 1);
+                setArrow(x-1, y + 2, 3);
                 Log.d("111111111111111111111111111", "pinside c");
             } else if (isObstacle(x - 3, y)) {//b =>d
                 setNumberGrid(tag, x - 3, y);
+                setArrow(x-1, y + 1, 3);
                 Log.d("111111111111111111111111111", "pinside d");
             } else if (isObstacle(x - 2, y - 1)) {//d=>e
                 setNumberGrid(tag, x - 2, y - 1);
+                setArrow(x, y , 3);
                 Log.d("111111111111111111111111111", "pinside e");
             } else if (isObstacle(x - 3, y - 1)) {//f
                 setNumberGrid(tag, x - 3, y - 1);
+                setArrow(x-1, y, 3);
                 Log.d("111111111111111111111111111", "pinside f");
             }
         } else if (dir == 90) {
             Log.d("111111111111111111111111111", "inside 1");
             if (isObstacle(x + 1, y + 2)) {//c =>a
                 setNumberGrid(tag, x + 1, y + 2);
+                setArrow(x+2, y + 2, 0);
                 Log.d("111111111111111111111111111", "inside a");
             } else if (isObstacle(x, y + 2)) {//a =>b
                 setNumberGrid(tag, x, y + 2);
+                setArrow(x+1, y + 2, 0);
                 Log.d("111111111111111111111111111", "inside b");
             } else if (isObstacle(x + 1, y + 3)) {//e => c
                 setNumberGrid(tag, x + 1, y + 3);
+                setArrow(x+2, y + 3, 0);
                 Log.d("111111111111111111111111111", "inside c");
             } else if (isObstacle(x, y + 3)) {//b=>d
                 setNumberGrid(tag, x, y + 3);
+                setArrow(x+1, y + 3, 0);
                 Log.d("111111111111111111111111111", "inside d");
             } else if (isObstacle(x - 1, y + 2)) {//d=>e
                 setNumberGrid(tag, x - 1, y + 2);
+                setArrow(x, y + 2, 0);
                 Log.d("111111111111111111111111111", "inside e");
             } else if (isObstacle(x - 1, y + 3)) {//f problem, test again
                 setNumberGrid(tag, x - 1, y + 3);
+                setArrow(x, y + 3, 0);
                 Log.d("111111111111111111111111111", "inside f");
             }
         } else if (dir == 180) {
             if (isObstacle(x + 2, y - 1)) {//c =>a
                 setNumberGrid(tag, x + 2, y - 1);
+                setArrow(x+2, y, 1);
                 Log.d("111111111111111111111111111", "inside a");
             } else if (isObstacle(x + 2, y)) {//a=>b
                 setNumberGrid(tag, x + 2, y);
+                setArrow(x+2, y+1, 1);
                 Log.d("111111111111111111111111111", "inside b");
             } else if (isObstacle(x + 3, y - 1)) {//e=>c
                 setNumberGrid(tag, x + 3, y - 1);
+                setArrow(x+3, y, 1);
                 Log.d("111111111111111111111111111", "inside c");
             } else if (isObstacle(x + 3, y)) {//b=>d
                 setNumberGrid(tag, x + 3, y);
+                setArrow(x+3, y+1, 1);
                 Log.d("111111111111111111111111111", "inside d");
             } else if (isObstacle(x + 2, y + 1)) {//d=>e
                 setNumberGrid(tag, x + 2, y + 1);
+                setArrow(x+2, y+2, 1);
                 Log.d("111111111111111111111111111", "inside e");
             } else if (isObstacle(x + 3, y + 1)) {//f
                 setNumberGrid(tag, x + 3, y + 1);
+                setArrow(x+3, y+2, 1);
                 Log.d("111111111111111111111111111", "inside f");
             }
         } else if (dir == 270) {
             if (isObstacle(x - 1, y - 2)) {//c=>a
                 setNumberGrid(tag, x - 1, y - 2);
+                setArrow(x, y, 2);
                 Log.d("111111111111111111111111111", "inside a");
             } else if (isObstacle(x, y - 2)) {//a=>b
                 setNumberGrid(tag, x, y - 2);
+                setArrow(x+1, y, 2);
                 Log.d("111111111111111111111111111", "inside b");
             } else if (isObstacle(x - 1, y - 3)) {//e=>c
                 setNumberGrid(tag, x - 1, y - 3);
+                setArrow(x, y-1, 2);
                 Log.d("111111111111111111111111111", "inside c");
             } else if (isObstacle(x, y - 3)) {//b=>d
                 setNumberGrid(tag, x, y - 3);
+                setArrow(x+1, y-1, 2);
                 Log.d("111111111111111111111111111", "inside d");
             } else if (isObstacle(x + 1, y - 2)) {//d=>e
                 setNumberGrid(tag, x + 1, y - 2);
+                setArrow(x+2, y, 2);
                 Log.d("111111111111111111111111111", "inside e");
             } else if (isObstacle(x + 1, y - 3)) {//f
                 setNumberGrid(tag, x + 1, y - 3);
+                setArrow(x+2, y-1, 2);
                 Log.d("111111111111111111111111111", "inside f");
             }
         } else {
@@ -770,13 +791,13 @@ public class MazeView extends View {
 
     public void setArrow(int x, int y, int dir) {
         Log.d("%%%%%%%%%%%%%%%%%%%%", "SET ARROW METHOD");
-        for (int i = 0; i < arrow.length; i++) {
-            if (arrow[i] == null) {
-                arrow[i][1] = x;
-                arrow[i][2] = y;
-                arrow[i][3] = dir;
-            }
-        }
+//        for (int i = 0; i < arrow.length; i++) {
+//            if (arrow[i] == null) {
+//                arrow[i][1] = x;
+//                arrow[i][2] = y;
+//                arrow[i][3] = dir;
+//            }
+//        }
         ArrayList<Integer> arr = new ArrayList<Integer>();
         arr.add(x);
         arr.add(y);
@@ -793,6 +814,7 @@ public class MazeView extends View {
         currentAngle=0;
         waypoint[0]=1;
         waypoint[1]=1;
+        arrowIcons.clear();
         refreshExploration();
         invalidate();
     }
