@@ -224,6 +224,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         Log.d("INTENTIONAL DELAY","SENT");
                     }
                 }, 1000);
+                try {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            displayImageResult();
+                            Log.d("INTENTIONAL DELAY", "SENT");
+                            Toast.makeText(MainActivity.this, "Forced image recog", Toast.LENGTH_SHORT).show();
+                        }
+                    }, 330000);
+
+                } catch (Exception e) {
+
+                }
                 setStatusMessage("Image recog in progress");
             }
         });
@@ -446,8 +459,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     try {
                         Log.d("^^^^^^^^^^^^^^^^^^^^^^^^^^^^", "B");
                         // Create a URL for the desired page
-//                        String temp = "http://192.168.21.15/location.txt";
-                        String temp = "https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/resultsingle.txt";
+                        String temp = "http://192.168.21.15/location.txt";
+//                        String temp = "https://raw.githubusercontent.com/Lonevv0lf/fileTest/main/resultsingle3.txt";
                         URL url = new URL(temp);
                         // Read all the text returned by the server
                         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -459,6 +472,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                             //Whats inside every line
                             // obs x,obs y,robotx,roboty,direction, tag
+
                             for (String i : str.split(",")) {
                                 list.add(i);
                             }
@@ -474,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                        //                              xfx         21cmx     42cmx
 //                        //                              xcx         64xxx     65xxx
                             //Lastest
+
                             mazeView.findBestObstacle(li);
 //                            mazeView.findBestObstacle(Integer.parseInt(li.get(0).toString()), Integer.parseInt(li.get(1).toString()), Integer.parseInt(li.get(4).toString()) * 90, li.get(5).toString());
 //
@@ -519,9 +534,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mazeView.setCurrentPosition(mdf2,mdf1);
         mazeView.setCurrentAngle(mdf3*90);
 
-        String mdf4=hexToBinary(split[4]);//mdf1
-        String mdf5=hexToBinary(split[5]);//mdf2
-        try{
+
+        try {
+            String mdf4 = hexToBinary(split[4]);//mdf1
+            String mdf5 = hexToBinary(split[5]);//mdf2
             setMDFShort(mdf4,mdf5);
         }catch (NumberFormatException e){
             Log.d("OOOOOOOOOOOOOOOOOOOOO","Number format exception");

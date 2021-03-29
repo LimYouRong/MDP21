@@ -496,6 +496,7 @@ public class MazeView extends View {
         if (x >= 0 && x < COLUMNS_SIZE && y >= 0 && y < ROWS_SIZE) {
             return obstacle[y][x] != 0;
         }
+        obstacle[y][x] = 1;
         Log.d("QQQQQQQQQQQQQQQQQ", "OBS outside of cells");
         return false;
     }
@@ -506,11 +507,20 @@ public class MazeView extends View {
         int y = Integer.parseInt(li.get(1).toString());//y is current_y
 //        int cur_x = Integer.parseInt(li.get(2).toString());//We dont need this
 //        int cur_y = Integer.parseInt(li.get(3).toString());//we dont need this
-        int dir = Integer.parseInt(li.get(4).toString()) * 90;
-        dir = 0 * 90;
+        int dir = Integer.parseInt(li.get(2).toString()) * 90;
+
+//        setNumberGrid("404", x - 2, y + 1);
+//        dir = 0 * 90;
 
         //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
-        String tag = li.get(5).toString();
+        String tag = li.get(3).toString();
+
+        //if(tag in set):
+        //  return;
+        //else:
+        //  do fuzzy
+        //add item to set
+
         //mazeView.setArrow(Integer.parseInt(li.get(2).toString()),Integer.parseInt(li.get(3).toString()),Integer.parseInt(li.get(4).toString()));
         Log.d("111111111111111111111111111", "inside findBestObs method");
         Log.d("(((((((((((((((((((())))))))))))))))))", x + " and " + y + " and " + dir + " and tag " + tag);
@@ -541,6 +551,10 @@ public class MazeView extends View {
                 setNumberGrid(tag, x - 3, y - 1);
                 setArrow(x-1, y, 3);
                 Log.d("111111111111111111111111111", "pinside f");
+            } else {
+                Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
+                setObstacle(y, x);
+                setNumberGrid(tag, x, y);
             }
         } else if (dir == 90) {
             Log.d("111111111111111111111111111", "inside 1");
@@ -568,6 +582,10 @@ public class MazeView extends View {
                 setNumberGrid(tag, x - 1, y + 3);
                 setArrow(x, y + 3, 0);
                 Log.d("111111111111111111111111111", "inside f");
+            } else {
+                Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
+                setObstacle(y, x);
+                setNumberGrid(tag, x, y);
             }
         } else if (dir == 180) {
             if (isObstacle(x + 2, y - 1)) {//c =>a
@@ -594,6 +612,10 @@ public class MazeView extends View {
                 setNumberGrid(tag, x + 3, y + 1);
                 setArrow(x+3, y+2, 1);
                 Log.d("111111111111111111111111111", "inside f");
+            } else {
+                Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
+                setObstacle(y, x);
+                setNumberGrid(tag, x, y);
             }
         } else if (dir == 270) {
             if (isObstacle(x - 1, y - 2)) {//c=>a
@@ -620,11 +642,13 @@ public class MazeView extends View {
                 setNumberGrid(tag, x + 1, y - 3);
                 setArrow(x+2, y-1, 2);
                 Log.d("111111111111111111111111111", "inside f");
+            } else {
+                Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
+                setObstacle(y, x);
+                setNumberGrid(tag, x, y);
             }
-        } else {
-            Log.d("OOOOOOOOOOOOOOOOOOOO", "no closest obs");
-        }
 
+        }
         invalidate();
     }
     public void refreshExploration() {
